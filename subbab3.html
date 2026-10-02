@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi 3: Poster Pakai AI Bijak - Kelas KKA</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        'pastel-blue': '#dbeafe',
+                        'pastel-yellow': '#fef08a',
+                        'pastel-green': '#d1fae5',
+                        'pastel-pink': '#fce7f3',
+                        'pastel-purple': '#e0e7ff',
+                        'primary': '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Canvas Confetti Library for Party Animation -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow-x: hidden;
+        }
+
+        /* Wizard Step Animations */
+        .step-content {
+            display: none;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        
+        .step-content.active {
+            display: block;
+            animation: slideFadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes slideFadeIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Mascot floating animation */
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        /* Typing effect indicator */
+        .typing-dot {
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Disabled Button Style for TTS Sync */
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans text-slate-800 selection:bg-indigo-200 selection:text-indigo-900">
+
+    <!-- WELCOME SCREEN: Meminta izin pengguna untuk mengaktifkan audio -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 bg-pastel-blue flex flex-col items-center justify-center p-4 transition-opacity duration-500">
+        <div class="bg-white rounded-3xl p-8 max-w-lg text-center shadow-2xl transform hover:scale-105 transition-transform">
+            <div class="text-7xl mb-4 float-anim">🎨</div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-700 mb-4">Siap Membuat Poster?</h1>
+            <p class="text-lg text-slate-600 font-semibold mb-8">Nyalakan suaramu, karena Pixel akan memandumu di setiap langkah untuk mading SD Negeri 4 Tugusari!</p>
+            <button onclick="startWizard()" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xl py-4 px-10 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 w-full">
+                <span>Mulai Misi & Nyalakan Suara</span>
+                <span class="text-2xl">🔊</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app-content" class="hidden flex-grow flex-col pt-4 md:pt-8 pb-20 px-4 w-full max-w-6xl mx-auto">
+        
+        <!-- HEADER & PROGRESS BAR -->
+        <header class="w-full bg-white rounded-3xl shadow-md p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border-b-4 border-indigo-100 z-10 relative">
+            <a href="index.html" class="text-indigo-500 font-bold hover:bg-indigo-50 px-3 py-2 rounded-xl transition flex items-center gap-2">
+                <span>🏠</span> <span class="hidden md:inline">Beranda</span>
+            </a>
+            
+            <div class="flex-grow flex items-center justify-center w-full max-w-xl">
+                <!-- Progress Indicators -->
+                <div class="flex items-center w-full justify-between relative">
+                    <div class="absolute left-0 top-1/2 w-full h-1.5 bg-slate-200 -z-10 transform -translate-y-1/2 rounded-full"></div>
+                    <div id="progress-bar" class="absolute left-0 top-1/2 h-1.5 bg-indigo-500 -z-10 transform -translate-y-1/2 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                    
+                    <!-- Steps markers -->
+                    <div class="step-marker flex flex-col items-center gap-1" data-step="1">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300 bg-indigo-500 text-white">1</div>
+                        <span class="text-xs font-bold text-slate-500 hidden md:block">Misi</span>
+                    </div>
+                    <div class="step-marker flex flex-col items-center gap-1" data-step="2">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300">2</div>
+                        <span class="text-xs font-bold text-slate-500 hidden md:block">Resep</span>
+                    </div>
+                    <div class="step-marker flex flex-col items-center gap-1" data-step="3">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300">3</div>
+                        <span class="text-xs font-bold text-slate-500 hidden md:block">Alat AI</span>
+                    </div>
+                    <div class="step-marker flex flex-col items-center gap-1" data-step="4">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300">4</div>
+                        <span class="text-xs font-bold text-slate-500 hidden md:block">Aksi</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="mute-btn" onclick="toggleMute()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-xl shadow-inner transition" aria-label="Toggle Suara">
+                🔊
+            </button>
+        </header>
+
+        <!-- MAIN LAYOUT: Mascot Sidebar + Content Area -->
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 flex-grow">
+            
+            <!-- PIXEL SIDEBAR (Left) -->
+            <aside class="w-full lg:w-1/3 flex flex-col items-center">
+                <div class="sticky top-6 flex flex-col items-center">
+                    
+                    <!-- SVG Mascot -->
+                    <div class="w-32 h-32 md:w-48 md:h-48 float-anim z-10 mb-[-10px]">
+                        <svg viewBox="0 0 120 120" class="w-full h-full drop-shadow-xl">
+                            <!-- Antenna Glow -->
+                            <circle cx="60" cy="15" r="8" fill="#fcd34d" class="animate-pulse opacity-60"/>
+                            <line x1="60" y1="30" x2="60" y2="15" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="60" cy="15" r="5" fill="#f59e0b"/>
+                            <!-- Head -->
+                            <rect x="25" y="30" width="70" height="60" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+                            <rect x="15" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+                            <rect x="95" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+                            <!-- Face -->
+                            <rect x="35" y="42" width="50" height="36" rx="10" fill="#1e293b"/>
+                            <path d="M 42 55 Q 46 50 50 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+                            <path d="M 70 55 Q 74 50 78 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+                            <path d="M 52 65 Q 60 70 68 65" stroke="#34d399" stroke-width="3" fill="transparent" stroke-linecap="round"/>
+                            <!-- Body -->
+                            <path d="M 40 90 L 80 90 L 90 120 L 30 120 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
+                            <circle cx="60" cy="105" r="6" fill="#38bdf8"/>
+                        </svg>
+                    </div>
+
+                    <!-- Speech Bubble -->
+                    <div class="bg-white border-4 border-indigo-200 rounded-3xl p-5 shadow-xl relative w-full text-center lg:text-left">
+                        <!-- Triangle Pointers -->
+                        <div class="absolute w-6 h-6 bg-white border-t-4 border-l-4 border-indigo-200 transform rotate-45 -top-3 left-1/2 -ml-3 lg:hidden"></div>
+                        <div class="absolute w-6 h-6 bg-white border-t-4 border-r-4 border-indigo-200 transform 45 -top-3 left-1/2 lg:-top-0 lg:left-auto lg:-right-3 lg:rotate-45 lg:mt-10 hidden lg:block" style="border-right-width: 4px; border-top-width: 4px; border-left-width: 0; border-bottom-width: 0;"></div>
+                        
+                        <div class="flex items-center justify-center lg:justify-start gap-2 mb-2">
+                            <h3 class="font-bold text-indigo-700 text-lg flex items-center gap-2">
+                                <span>Pixel Berkata</span>
+                                <span id="speaking-icon" class="hidden">🔊</span>
+                            </h3>
+                            <div id="typing-indicator" class="hidden flex space-x-1">
+                                <div class="w-2 h-2 bg-indigo-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-indigo-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-indigo-400 rounded-full typing-dot"></div>
+                            </div>
+                        </div>
+                        <p id="pixel-speech-text" class="text-slate-700 font-semibold md:text-lg min-h-[100px] leading-relaxed">
+                            <!-- Teks disuntikkan lewat JS -->
+                        </p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CONTENT WIZARD (Right) -->
+            <main class="w-full lg:w-2/3 bg-white rounded-3xl shadow-xl border-4 border-slate-100 p-6 md:p-10 relative overflow-hidden flex flex-col">
+                
+                <!-- STEP 1: Misi & Aturan -->
+                <div id="step-1" class="step-content active flex-grow">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-slate-100 pb-4">
+                        <span class="text-4xl bg-indigo-100 p-2 rounded-2xl">🎯</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-800">Fase 1: Misi & Aturan</h2>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-md text-white mb-8 transform rotate-1">
+                        <h3 class="text-xl font-bold mb-2 flex items-center gap-2">⭐ Target Misi Hari Ini:</h3>
+                        <p class="font-medium text-indigo-50 text-lg">Kamu dan timmu akan membuat poster dengan bantuan AI. Poster yang terpilih akan dipresentasikan, lalu ditempel di <strong class="bg-white text-indigo-700 px-2 py-1 rounded shadow-sm inline-block mt-1">Mading SD Negeri 4 Tugusari!</strong></p>
+                    </div>
+
+                    <h3 class="font-bold text-xl text-slate-700 mb-4">Ingat 4 Aturan Pakai AI Bijak:</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-slate-50 border-2 border-slate-200 p-3 rounded-xl flex items-center gap-3 font-semibold text-slate-600 shadow-sm"><span class="text-2xl">🙋‍♂️</span> Tanya guru/ortu.</div>
+                        <div class="bg-slate-50 border-2 border-slate-200 p-3 rounded-xl flex items-center gap-3 font-semibold text-slate-600 shadow-sm"><span class="text-2xl">🕵️‍♂️</span> Cek fakta ulang.</div>
+                        <div class="bg-slate-50 border-2 border-slate-200 p-3 rounded-xl flex items-center gap-3 font-semibold text-slate-600 shadow-sm"><span class="text-2xl">🔒</span> Jaga data pribadi.</div>
+                        <div class="bg-slate-50 border-2 border-slate-200 p-3 rounded-xl flex items-center gap-3 font-semibold text-slate-600 shadow-sm"><span class="text-2xl">🤝</span> Sebutkan AI.</div>
+                    </div>
+
+                    <div class="bg-rose-50 border-l-4 border-rose-400 p-5 rounded-r-2xl">
+                        <h3 class="font-bold text-rose-800 text-lg mb-3">Aturan Ekstra Sebelum Mencoba:</h3>
+                        <ul class="space-y-3 text-rose-700 font-medium">
+                            <li class="flex gap-2 items-start"><span>🚫</span> <span>Jangan memasukkan foto asli wajahmu atau nama orang sungguhan ke dalam AI pembuat gambar.</span></li>
+                            <li class="flex gap-2 items-start"><span>👁️</span> <span>Tunjukkan hasilnya ke Pak Lim sebelum dicetak untuk mading.</span></li>
+                            <li class="flex gap-2 items-start"><span>💪</span> <span>Boleh mencoba berkali-kali kalau hasilnya kurang pas. Belajar dari proses!</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Resep Poster STEAM -->
+                <div id="step-2" class="step-content flex-grow">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-slate-100 pb-4">
+                        <span class="text-4xl bg-emerald-100 p-2 rounded-2xl">🧪</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-700">Fase 2: Belajar Dari Yang Kita Buat</h2>
+                    </div>
+                    
+                    <p class="text-slate-600 font-semibold mb-6">Dalam membuat poster dengan AI, kita memadukan banyak ilmu (STEM):</p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4 p-4 bg-white border-2 border-sky-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 flex-shrink-0 bg-sky-100 rounded-full flex items-center justify-center text-2xl">🔬</div>
+                            <div>
+                                <h3 class="font-bold text-sky-800 text-lg">Science & Technology</h3>
+                                <p class="text-slate-600 text-sm font-medium">AI gambar belajar dari jutaan data. Ia bukan manusia, jadi kadang hasilnya bisa keliru (misal: jumlah jarinya aneh!). Kita harus kritis.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-white border-2 border-amber-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 flex-shrink-0 bg-amber-100 rounded-full flex items-center justify-center text-2xl">⚙</div>
+                            <div>
+                                <h3 class="font-bold text-amber-800 text-lg">Engineering</h3>
+                                <p class="text-slate-600 text-sm font-medium">Tulis perintah (*prompt*), lihat hasilnya, lalu perbaiki kalimatnya minimal 1 kali sampai mendapat gambar yang pas.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-white border-2 border-pink-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                            <div class="w-12 h-12 flex-shrink-0 bg-pink-100 rounded-full flex items-center justify-center text-2xl">🎨</div>
+                            <div>
+                                <h3 class="font-bold text-pink-800 text-lg">Art & Mathematics</h3>
+                                <p class="text-slate-600 text-sm font-medium">Susun elemen poster agar proporsional. Hitung ruang kosong untuk menaruh judul dan teks agar mudah dibaca.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-200">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-3">Isi Wajib di Postermu Nanti:</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-white border-2 border-emerald-300 px-3 py-1.5 rounded-lg text-emerald-700 font-bold text-sm shadow-sm">🖼️ 1 Gambar AI</span>
+                            <span class="bg-white border-2 border-emerald-300 px-3 py-1.5 rounded-lg text-emerald-700 font-bold text-sm shadow-sm">✍️ Judul Menarik</span>
+                            <span class="bg-white border-2 border-emerald-300 px-3 py-1.5 rounded-lg text-emerald-700 font-bold text-sm shadow-sm">👍 1 Manfaat AI</span>
+                            <span class="bg-white border-2 border-emerald-300 px-3 py-1.5 rounded-lg text-emerald-700 font-bold text-sm shadow-sm">⚠️ 1 Bahaya AI</span>
+                            <span class="bg-white border-2 border-emerald-300 px-3 py-1.5 rounded-lg text-emerald-700 font-bold text-sm shadow-sm">📢 1 Slogan Bijak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Alat AI (Rekomendasi 4 AI) -->
+                <div id="step-3" class="step-content flex-grow">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-slate-100 pb-4">
+                        <span class="text-4xl bg-amber-100 p-2 rounded-2xl">🛠️</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-amber-600">Fase 3: Pilih Alat AI-mu</h2>
+                    </div>
+
+                    <p class="text-slate-600 font-semibold mb-6">Pilih salah satu dari 4 AI rekomendasi Pak Lim untuk membantu kelompokmu. Perhatikan kelebihannya!</p>
+
+                    <!-- GRID 4 AI TOOLS -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Canva AI -->
+                        <div class="bg-white border-2 border-cyan-200 rounded-2xl p-5 shadow hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-extrabold text-cyan-700 text-xl mb-3 border-b border-cyan-100 pb-2">1. Canva AI <span class="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded-full align-middle ml-2">Desain</span></h3>
+                            <ul class="text-sm text-slate-600 space-y-2 flex-grow font-medium mb-4">
+                                <li><span class="font-bold text-cyan-600">Cocok untuk:</span> Membuat poster utuh & gambar *Magic Media*.</li>
+                                <li><span class="font-bold text-cyan-600">Perlu Login:</span> Ya (Pakai Belajar.id)</li>
+                                <li><span class="font-bold text-cyan-600">Bahasa Indonesia:</span> Ya</li>
+                            </ul>
+                            <div class="bg-cyan-50 p-2 rounded-lg text-xs font-bold text-cyan-800 mt-auto border border-cyan-100">Catatan: Paling mudah untuk menyusun teks dan tata letak.</div>
+                        </div>
+
+                        <!-- Google Gemini -->
+                        <div class="bg-white border-2 border-blue-200 rounded-2xl p-5 shadow hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-extrabold text-blue-700 text-xl mb-3 border-b border-blue-100 pb-2">2. Google Gemini <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full align-middle ml-2">Riset</span></h3>
+                            <ul class="text-sm text-slate-600 space-y-2 flex-grow font-medium mb-4">
+                                <li><span class="font-bold text-blue-600">Cocok untuk:</span> Mencari ide slogan dan kalimat manfaat/bahaya.</li>
+                                <li><span class="font-bold text-blue-600">Perlu Login:</span> Ya</li>
+                                <li><span class="font-bold text-blue-600">Bahasa Indonesia:</span> Sangat Bagus</li>
+                            </ul>
+                            <div class="bg-blue-50 p-2 rounded-lg text-xs font-bold text-blue-800 mt-auto border border-blue-100">Catatan: Selalu cek fakta ulang jawaban Gemini.</div>
+                        </div>
+
+                        <!-- Chat GPT -->
+                        <div class="bg-white border-2 border-emerald-200 rounded-2xl p-5 shadow hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-extrabold text-emerald-700 text-xl mb-3 border-b border-emerald-100 pb-2">3. Chat GPT <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full align-middle ml-2">Diskusi</span></h3>
+                            <ul class="text-sm text-slate-600 space-y-2 flex-grow font-medium mb-4">
+                                <li><span class="font-bold text-emerald-600">Cocok untuk:</span> Teman diskusi (*brainstorming*) konsep poster.</li>
+                                <li><span class="font-bold text-emerald-600">Perlu Login:</span> Ya</li>
+                                <li><span class="font-bold text-emerald-600">Bahasa Indonesia:</span> Sangat Bagus</li>
+                            </ul>
+                            <div class="bg-emerald-50 p-2 rounded-lg text-xs font-bold text-emerald-800 mt-auto border border-emerald-100">Catatan: Jangan bagikan info pribadi saat ngobrol di sini.</div>
+                        </div>
+
+                        <!-- Dola AI -->
+                        <div class="bg-white border-2 border-pink-200 rounded-2xl p-5 shadow hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-extrabold text-pink-700 text-xl mb-3 border-b border-pink-100 pb-2">4. Dola AI <span class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full align-middle ml-2">Cepat</span></h3>
+                            <ul class="text-sm text-slate-600 space-y-2 flex-grow font-medium mb-4">
+                                <li><span class="font-bold text-pink-600">Cocok untuk:</span> Tanya jawab cepat lewat WhatsApp/Telegram.</li>
+                                <li><span class="font-bold text-pink-600">Perlu Login:</span> Pakai nomor WA</li>
+                                <li><span class="font-bold text-pink-600">Bahasa Indonesia:</span> Ya</li>
+                            </ul>
+                            <div class="bg-pink-50 p-2 rounded-lg text-xs font-bold text-pink-800 mt-auto border border-pink-100">Catatan: Praktis di HP, tapi tetap awasi keamanan data.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Alur Presentasi & Penutup -->
+                <div id="step-4" class="step-content flex-grow">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-slate-100 pb-4">
+                        <span class="text-4xl bg-pink-100 p-2 rounded-2xl">📢</span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-pink-600">Fase 4: Alur Presentasi</h2>
+                    </div>
+
+                    <p class="text-slate-600 font-semibold mb-6">Jika poster timmu sudah selesai, ini urutan presentasinya di depan kelas:</p>
+
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-6 relative">
+                        <div class="absolute w-1.5 bg-pink-300 left-8 top-10 bottom-10 rounded-full z-0 hidden md:block"></div>
+                        
+                        <div class="flex flex-col gap-6 relative z-10">
+                            <!-- Alur 1 -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-extrabold text-lg flex-shrink-0 shadow-md">1</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 text-lg">Tampilkan & Ceritakan Poster</h4>
+                                    <p class="text-sm font-medium text-slate-500">Tunjukkan hasilnya. Ceritakan apa *prompt* (perintah) yang kamu ketik ke AI dan perbaikannya.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Alur 2 -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-extrabold text-lg flex-shrink-0 shadow-md">2</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 text-lg">Sebutkan Manfaat & Bahaya</h4>
+                                    <p class="text-sm font-medium text-slate-500">Jelaskan 1 manfaat dan 1 bahaya AI yang tertulis di postermu.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Alur 3 -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-extrabold text-lg flex-shrink-0 shadow-md">3</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700 text-lg">Sesi Umpan Balik</h4>
+                                    <p class="text-sm font-medium text-slate-500">Dengarkan teman kelas memberikan 1 pujian dan 1 saran yang membangun.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wait-warning" class="mt-8 text-center text-rose-500 font-bold animate-pulse text-sm">
+                        ⏳ Dengarkan instruksi Pixel sampai selesai untuk membuka tombol...
+                    </div>
+                </div>
+
+                <!-- FOOTER NAVIGATION BUTTONS -->
+                <div class="mt-8 pt-6 border-t-2 border-slate-100 flex items-center justify-between mt-auto">
+                    <button id="btn-prev" onclick="changeStep(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 px-6 rounded-xl transition hidden focus:outline-none focus:ring-4 focus:ring-slate-200">
+                        ⬅️ Kembali
+                    </button>
+                    
+                    <button id="btn-next" onclick="changeStep(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl ml-auto transition shadow-md flex items-center gap-2 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                        <span>Lanjut</span> ➡️️
+                    </button>
+                    
+                    <!-- BUTTON SELESAI (Disabled Initially on Step 4) -->
+                    <button id="btn-finish" onclick="triggerPartyAndFinish()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-lg py-4 px-10 rounded-2xl ml-auto transition-all shadow-xl hidden flex-items-center gap-2 transform focus:outline-none focus:ring-4 focus:ring-emerald-300" disabled>
+                        <span>Selesai Berpetualang!</span> 🎉
+                    </button>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        
+        let currentStep = 1;
+        const totalSteps = 4;
+        let voiceEnabled = true;
+        let isFinalSpeechDone = false; // To track if Pixel finished final speech
+
+        // Dialog array Pixel for each step
+        const pixelDialogs = {
+            intro: "Halo Detektif Siber! Siap membuat poster pertamamu dengan AI? Klik tombol mulai di bawah ya!",
+            1: "Fase 1: Misi dan Aturan! Target kita membuat poster hebat untuk mading SD Negeri 4 Tugusari. Ingat selalu janji siber dan jangan gunakan foto asli wajahmu ya!",
+            2: "Fase 2: Belajar dari proses! Tahukah kamu? Membuat poster itu perpaduan Sains, Teknik, dan Seni. Pastikan kelima isi wajib ada di postermu.",
+            3: "Fase 3: Pilih alat kecerdasan buatanmu! Pak Lim merekomendasikan empat alat: Canva, Gemini, Chat GPT, dan Dola AI. Pilih yang paling cocok dengan kebutuhan timmu.",
+            4: "Fase 4: Alur Presentasi! Tampilkan poster, ceritakan prosesmu, lalu dengarkan pujian dan saran teman-temanmu. Jika kamu sudah paham semua langkahnya, klik tombol selesai di bawah. Mari kita buat mading sekolah kita jadi luar biasa!"
+        };
+
+        // TTS (Text-to-Speech) Logic
+        function toggleMute() {
+            voiceEnabled = !voiceEnabled;
+            $('mute-btn').textContent = voiceEnabled ? '🔊' : '🔇';
+            if (!voiceEnabled && window.speechSynthesis) {
+                speechSynthesis.cancel();
+                // If muted on step 4, immediately enable button to avoid soft-lock
+                if(currentStep === 4) enableFinishButton();
+            } else if (voiceEnabled) {
+                speak(pixelDialogs[currentStep]);
+            }
+        }
+
+        function speak(text) {
+            if (!voiceEnabled || !window.speechSynthesis) {
+                if(currentStep === 4) enableFinishButton(); // fallback
+                return;
+            }
+            
+            speechSynthesis.cancel(); // Stop current speech
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            utterance.rate = 0.95;
+            utterance.pitch = 1.3; // Cute robot voice slightly higher
+            
+            // Logic to handle button unlock at step 4
+            if (currentStep === 4) {
+                isFinalSpeechDone = false;
+                disableFinishButton();
+                
+                utterance.onend = function() {
+                    isFinalSpeechDone = true;
+                    enableFinishButton();
+                };
+                
+                // Fallback in case onend doesn't fire due to browser bug
+                setTimeout(() => {
+                    if (!isFinalSpeechDone) enableFinishButton();
+                }, (text.length * 90)); // roughly estimate time based on text length
+            }
+
+            // UI feedback while talking
+            const textEl = $('pixel-speech-text');
+            const indicator = $('typing-indicator');
+            const speakingIcon = $('speaking-icon');
+            
+            textEl.innerHTML = '';
+            indicator.classList.remove('hidden');
+            speakingIcon.classList.add('hidden');
+            
+            // Artificial delay to simulate processing
+            setTimeout(() => {
+                indicator.classList.add('hidden');
+                speakingIcon.classList.remove('hidden');
+                textEl.innerHTML = text;
+                speechSynthesis.speak(utterance);
+            }, 500);
+
+            // Hide icon when done (generic fallback for non-step-4)
+            if(currentStep !== 4) {
+                utterance.onend = function() {
+                    speakingIcon.classList.add('hidden');
+                }
+            }
+        }
+
+        // Button States for Step 4
+        function disableFinishButton() {
+            const btn = $('btn-finish');
+            btn.disabled = true;
+            btn.classList.add('btn-disabled');
+            $('wait-warning').classList.remove('hidden');
+        }
+
+        function enableFinishButton() {
+            const btn = $('btn-finish');
+            btn.disabled = false;
+            btn.classList.remove('btn-disabled');
+            btn.classList.add('animate-bounce'); // Make it bouncy!
+            $('wait-warning').classList.add('hidden');
+            $('speaking-icon').classList.add('hidden');
+        }
+
+        function startWizard() {
+            $('welcome-screen').classList.add('opacity-0');
+            setTimeout(() => {
+                $('welcome-screen').classList.add('hidden');
+                const app = $('app-content');
+                app.classList.remove('hidden');
+                app.classList.add('flex');
+                
+                // Init first step
+                updateWizardUI();
+            }, 500);
+        }
+
+        function changeStep(direction) {
+            const nextStep = currentStep + direction;
+            if (nextStep >= 1 && nextStep <= totalSteps) {
+                // Stop any playing speech
+                speechSynthesis.cancel();
+                
+                $(`step-${currentStep}`).classList.remove('active');
+                currentStep = nextStep;
+                $(`step-${currentStep}`).classList.add('active');
+                
+                updateWizardUI();
+            }
+        }
+
+        function updateWizardUI() {
+            // Update progress bar width
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            $('progress-bar').style.width = `${percentage}%`;
+
+            // Update step markers
+            document.querySelectorAll('.step-marker div').forEach((marker, index) => {
+                if (index + 1 <= currentStep) {
+                    marker.className = 'w-8 h-8 md:w-10 md:h-10 rounded-full font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300 bg-indigo-500 text-white';
+                } else {
+                    marker.className = 'w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center border-4 border-white shadow-sm transition-colors duration-300';
+                }
+            });
+
+            // Update navigation buttons
+            $('btn-prev').classList.toggle('hidden', currentStep === 1);
+            
+            if (currentStep === totalSteps) {
+                $('btn-next').classList.add('hidden');
+                $('btn-finish').classList.remove('hidden');
+                $('btn-finish').classList.add('flex'); // Add flex back for gap/items-center
+                // Button is disabled initially via HTML and speak() logic
+            } else {
+                $('btn-next').classList.remove('hidden');
+                $('btn-finish').classList.add('hidden');
+                $('btn-finish').classList.remove('flex');
+            }
+
+            // Trigger Voice for the step
+            speak(pixelDialogs[currentStep]);
+        }
+
+        // Final Party & Redirect
+        function triggerPartyAndFinish() {
+            // Stop bouncy animation so it looks pressed
+            $('btn-finish').classList.remove('animate-bounce');
+            $('btn-finish').innerHTML = 'Mengarahkan ke Beranda... 🚀';
+            
+            // Fire Confetti!
+            var duration = 2.5 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#4f46e5', '#34d399', '#fcd34d', '#f472b6']
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#4f46e5', '#34d399', '#fcd34d', '#f472b6']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+            
+            // Short success speech
+            if (voiceEnabled && window.speechSynthesis) {
+                speechSynthesis.cancel();
+                let u = new SpeechSynthesisUtterance("Mari kita buat mading sekolah kita jadi luar biasa!");
+                u.lang = 'id-ID';
+                speechSynthesis.speak(u);
+            }
+
+            // Wait 3 seconds, then redirect to index.html
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        }
+
+        // On Load text placeholder
+        window.onload = () => {
+            $('pixel-speech-text').textContent = "Menunggu klik dari Detektif Siber...";
+        }
+    </script>
+</body>
+</html>
