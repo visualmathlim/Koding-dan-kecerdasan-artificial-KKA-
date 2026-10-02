@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 1 — Kenali AI | Pak Lim & Pixel</title>
+<meta name="description" content="Mission 1 KKA: Kenali AI bersama Pak Lim dan Pixel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Quicksand', 'ui-rounded', 'system-ui', 'sans-serif'] },
+      boxShadow: {
+        soft: '0 16px 45px rgba(30,41,59,.10)',
+        glow: '0 0 0 6px rgba(129,140,248,.10), 0 18px 50px rgba(30,41,59,.12)'
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root{ --ink:#243047; --paper:rgba(255,255,255,.86); }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);
+    font-family:Quicksand,ui-rounded,system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 10% 8%,rgba(254,240,138,.65),transparent 22%),
+      radial-gradient(circle at 90% 14%,rgba(196,181,253,.55),transparent 23%),
+      linear-gradient(180deg,#dbeafe 0%,#eef7ff 34%,#ecfdf5 72%,#fff7ed 100%);
+    overflow-x:hidden;
+  }
+  .grid-bg{
+    position:fixed;inset:0;pointer-events:none;z-index:-2;
+    background-image:
+      linear-gradient(rgba(79,70,229,.055) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(79,70,229,.055) 1px,transparent 1px);
+    background-size:36px 36px;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 88%);
+    mask-image:linear-gradient(180deg,#000 0%,transparent 88%);
+  }
+  .blob{position:fixed;border-radius:50%;filter:blur(50px);opacity:.45;pointer-events:none;z-index:-1}
+  .b1{width:320px;height:320px;top:18%;right:-110px;background:#c4b5fd}
+  .b2{width:300px;height:300px;bottom:10%;left:-120px;background:#99f6e4}
+  .glass{background:var(--paper);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .section-card{border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 50px rgba(30,41,59,.10)}
+  .progress-fill{transition:width .45s ease}
+  .float{animation:float 4s ease-in-out infinite}
+  @keyframes float{50%{transform:translateY(-8px)}}
+  .pop{animation:pop .45s ease both}
+  @keyframes pop{0%{opacity:0;transform:scale(.94) translateY(8px)}100%{opacity:1;transform:none}}
+  .slide{animation:slide .55s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes slide{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+  .pulse-soft{animation:pulseSoft 1.6s ease-in-out infinite}
+  @keyframes pulseSoft{50%{transform:scale(1.04)}}
+  .talking{animation:talk .9s ease-in-out infinite}
+  @keyframes talk{50%{opacity:.55}}
+  .choice{transition:.18s ease;min-height:58px}
+  .choice:hover:not(:disabled){transform:translateY(-2px)}
+  .choice:active:not(:disabled){transform:translateY(0)}
+  .choice:disabled{cursor:not-allowed}
+  .choice:disabled:not(.correct):not(.wrong){opacity:.6}
+  .choice.correct{background:#dcfce7;border-color:#34d399;color:#065f46}
+  .choice.wrong{background:#ffe4e6;border-color:#fb7185;color:#9f1239}
+  .next-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+  .hidden-page{display:none!important}
+  .tiny-ring{box-shadow:0 0 0 5px rgba(255,255,255,.75),0 10px 22px rgba(30,41,59,.10)}
+  .image-slot{
+    min-height:280px;
+    background:linear-gradient(135deg,#eef2ff,#f0fdfa);
+    border:3px dashed #a5b4fc;
+  }
+  .image-slot.has-image{border-style:solid}
+  .image-slot img{max-height:360px;object-fit:contain}
+  @media (max-width:640px){ .image-slot{min-height:220px} }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+
+<!-- INTRO -->
+<section id="introPage" class="min-h-screen flex items-center justify-center px-4 py-10">
+  <div class="max-w-4xl w-full text-center slide">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-indigo-100 text-indigo-700 font-extrabold shadow-sm">
+      <span>🚀</span><span>MISSION 1</span><span>•</span><span>KENALI AI</span>
+    </div>
+
+    <div class="mt-8 flex justify-center">
+      <div class="relative">
+        <div class="absolute -inset-4 rounded-[2rem] bg-indigo-200/40 blur-2xl"></div>
+        <div class="relative glass tiny-ring rounded-[2rem] p-5">
+          <svg viewBox="0 0 120 140" class="w-36 h-36 md:w-44 md:h-44 float" role="img" aria-label="Pixel, maskot AI">
+            <circle cx="60" cy="16" r="8" fill="#fde68a"/>
+            <line x1="60" y1="29" x2="60" y2="16" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+            <rect x="24" y="29" width="72" height="63" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+            <rect x="14" y="50" width="11" height="21" rx="4" fill="#94a3b8"/>
+            <rect x="95" y="50" width="11" height="21" rx="4" fill="#94a3b8"/>
+            <rect x="34" y="41" width="52" height="38" rx="11" fill="#1e293b"/>
+            <circle cx="48" cy="58" r="6" fill="#34d399"/>
+            <circle cx="72" cy="58" r="6" fill="#34d399"/>
+            <path d="M48 68 Q60 76 72 68" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M40 92 L80 92 L90 128 L30 128 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
+            <circle cx="60" cy="108" r="7" fill="#38bdf8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-5 text-indigo-600 font-extrabold">🤖 Pixel • Teman Belajar AI</p>
+    <h1 class="mt-2 text-4xl md:text-6xl font-black tracking-tight text-slate-800">Kenali AI</h1>
+    <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl font-semibold text-slate-600">
+      Jadilah Detektif AI! Lihat, tebak, cari petunjuk, lalu buktikan apakah sesuatu menggunakan AI.
+    </p>
+
+    <div class="mt-8 glass section-card rounded-[2rem] p-5 md:p-7 max-w-2xl mx-auto text-left">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-12 h-12 rounded-2xl bg-amber-100 grid place-items-center text-2xl">🧑‍🏫</div>
+        <div>
+          <p class="font-black text-lg">Pak Lim</p>
+          <p class="text-slate-600 font-semibold leading-relaxed">Guru Pengampu Koding dan Kecerdasan Artifisial</p>
+        </div>
+      </div>
+      <div class="mt-5 p-4 rounded-2xl bg-indigo-50 border border-indigo-100">
+        <p class="font-black text-indigo-800">🎯 Tujuan Belajar</p>
+        <p class="mt-1 font-semibold text-slate-700">Aku bisa menyebut jenis AI dan membedakan mana yang AI dan bukan AI.</p>
+      </div>
+    </div>
+
+    <button id="startMission" class="mt-8 inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-full text-xl font-black shadow-glow transition active:translate-y-1">
+      Mulai Mission 1 <span>→</span>
+    </button>
+  </div>
+</section>
+
+<!-- MAIN -->
+<section id="mainPage" class="hidden-page">
+  <header class="sticky top-0 z-40 glass border-b border-white/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-indigo-100 grid place-items-center text-xl">🤖</div>
+        <div class="min-w-0">
+          <p class="font-black text-slate-800 leading-tight">MISSION 1 — KENALI AI</p>
+          <p class="text-xs md:text-sm font-bold text-slate-500">Pak Lim • Pixel</p>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <div class="hidden sm:flex items-center gap-2 text-sm font-black text-indigo-700">
+            <span id="progressText">1/4</span>
+            <div class="w-28 h-2.5 rounded-full bg-slate-200 overflow-hidden">
+              <div id="progressBar" class="progress-fill h-full bg-indigo-500" style="width:25%"></div>
+            </div>
+          </div>
+          <button id="voiceBtn" type="button" aria-pressed="true" title="Suara Pixel" class="px-3 py-2 rounded-full bg-indigo-100 text-indigo-800 font-black text-sm">🔊 Suara</button>
+          <div class="px-3 py-2 rounded-full bg-amber-100 text-amber-800 font-black text-sm">⭐ <span id="score">0</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-7 md:py-10">
+
+    <!-- STEP 1 -->
+    <section id="step1" class="step-section">
+      <div class="grid lg:grid-cols-[1.3fr_.7fr] gap-6 items-stretch">
+        <div class="glass section-card rounded-[2rem] p-5 md:p-8">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <span class="inline-flex px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-sm font-black">🔎 CHALLENGE 1</span>
+              <h2 class="text-3xl md:text-4xl font-black mt-3">Asli atau Buatan AI?</h2>
+            </div>
+            <div class="hidden sm:block text-5xl">🕵️</div>
+          </div>
+
+          <p class="mt-4 text-lg font-semibold text-slate-600">Lihat gambar ini baik-baik. Menurutmu, gambar ini <b>asli</b> atau <b>buatan AI</b>?</p>
+
+          <div id="imageSlot" class="image-slot rounded-[1.7rem] mt-6 flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+            <img id="uploadedImage" class="hidden w-full rounded-2xl" alt="Gambar tantangan Mission 1">
+            <div id="placeholderContent">
+              <div class="text-6xl">🖼️</div>
+              <p class="mt-3 text-lg font-black text-slate-700">Gambar tantangan diisi guru</p>
+              <p class="mt-1 text-sm text-slate-500 font-semibold">Gunakan tombol di bawah untuk memilih gambar dari perangkat.</p>
+            </div>
+          </div>
+
+          <div class="mt-5 flex flex-col sm:flex-row gap-3">
+            <label class="cursor-pointer flex-1">
+              <input id="imageInput" type="file" accept="image/*" class="hidden">
+              <span class="w-full inline-flex justify-center items-center gap-2 px-5 py-3 rounded-2xl bg-white border-2 border-indigo-200 text-indigo-700 font-black hover:bg-indigo-50 transition">📷 Ganti Gambar</span>
+            </label>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-3 mt-5">
+            <button data-a-answer="real" class="a-choice choice rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-lg font-black">🟢 ASLI</button>
+            <button data-a-answer="ai" class="a-choice choice rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-lg font-black">🟣 BUATAN AI</button>
+          </div>
+
+          <div id="aFeedback" class="hidden mt-5 rounded-2xl p-5" aria-live="polite"></div>
+        </div>
+
+        <aside class="glass section-card rounded-[2rem] p-5 md:p-7 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-100 grid place-items-center text-2xl">🤖</div>
+              <div>
+                <p class="text-sm font-black text-indigo-700">PESAN DARI PIXEL</p>
+                <p class="font-black text-slate-800">Detektif AI</p>
+              </div>
+            </div>
+            <div class="mt-5 rounded-2xl bg-indigo-50 border border-indigo-100 p-5">
+              <p class="font-extrabold text-slate-700 leading-relaxed">
+                “Jangan langsung percaya hanya karena sesuatu terlihat nyata. <b>🔎 Lihat → Cek → Baru Percaya.</b>”
+              </p>
+            </div>
+          </div>
+          <div class="mt-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+            <p class="text-sm text-emerald-700 font-black">SKILL</p>
+            <p class="font-black text-emerald-900">Membiasakan diri memeriksa informasi.</p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button id="next1" class="hidden next-btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="step2" class="step-section hidden-page">
+      <div class="glass section-card rounded-[2rem] p-5 md:p-8">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <span class="inline-flex px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-sm font-black">🧠 SKILL</span>
+            <h2 class="text-3xl md:text-4xl font-black mt-3">Kenali 3 Ide Besar tentang AI</h2>
+            <p class="mt-3 text-lg font-semibold text-slate-600 max-w-3xl">Jangan hanya membaca. Panggil Pixel untuk mendengarkan penjelasan dan contoh AI yang dekat dengan kehidupan sehari-hari.</p>
+          </div>
+          <div class="hidden md:block text-5xl">💡</div>
+        </div>
+
+        <div class="mt-6 rounded-[1.7rem] bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-5 md:p-6 shadow-lg">
+          <div class="flex flex-col md:flex-row md:items-center gap-5">
+            <div class="shrink-0 flex items-center gap-3">
+              <div class="w-16 h-16 rounded-2xl bg-white/15 grid place-items-center text-4xl">🤖</div>
+              <div>
+                <p class="text-xs font-black tracking-wider text-white/75">PESAN DARI PIXEL</p>
+                <p class="text-xl font-black">Ayo dengarkan Pixel!</p>
+              </div>
+            </div>
+            <div class="md:ml-auto">
+              <button id="callPixelSkill" class="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-white text-indigo-700 hover:bg-indigo-50 px-6 py-3 rounded-full font-black shadow-lg transition active:translate-y-1 disabled:opacity-60">
+                🔊 Panggil Pixel untuk Menjelaskan
+              </button>
+            </div>
+          </div>
+          <div id="pixelSkillSpeech" class="hidden mt-5 bg-white/12 rounded-2xl p-4 border border-white/15 font-bold leading-relaxed" aria-live="polite"></div>
+        </div>
+
+        <div class="mt-7 grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <article class="rounded-3xl p-5 bg-sky-50 border-2 border-sky-100">
+            <div class="text-4xl">🤖</div>
+            <p class="mt-3 text-sm font-black text-sky-700">01 • AI SEMPIT</p>
+            <h3 class="text-xl font-black mt-1">Jago pada tugas tertentu</h3>
+            <p class="mt-2 font-semibold text-slate-600">Contoh: asisten suara, penerjemah, rekomendasi video, dan sistem navigasi.</p>
+          </article>
+          <article class="rounded-3xl p-5 bg-fuchsia-50 border-2 border-fuchsia-100">
+            <div class="text-4xl">✨</div>
+            <p class="mt-3 text-sm font-black text-fuchsia-700">02 • AI GENERATIF</p>
+            <h3 class="text-xl font-black mt-1">Dapat membuat sesuatu</h3>
+            <p class="mt-2 font-semibold text-slate-600">Contoh hasil: teks, gambar, musik, atau kode dari perintah yang diberikan.</p>
+          </article>
+          <article class="rounded-3xl p-5 bg-amber-50 border-2 border-amber-100">
+            <div class="text-4xl">🧠</div>
+            <p class="mt-3 text-sm font-black text-amber-700">03A • AI UMUM</p>
+            <h3 class="text-xl font-black mt-1">Masih berupa gagasan</h3>
+            <p class="mt-2 font-semibold text-slate-600">Gagasan tentang AI yang dapat melakukan beragam tugas seperti kemampuan manusia.</p>
+          </article>
+          <article class="rounded-3xl p-5 bg-emerald-50 border-2 border-emerald-100">
+            <div class="text-4xl">🚀</div>
+            <p class="mt-3 text-sm font-black text-emerald-700">03B • AI SUPER</p>
+            <h3 class="text-xl font-black mt-1">Masih berupa gagasan</h3>
+            <p class="mt-2 font-semibold text-slate-600">Gagasan tentang AI dengan kemampuan umum yang melampaui kemampuan manusia.</p>
+          </article>
+        </div>
+
+        <div class="mt-6 rounded-3xl bg-indigo-50 border border-indigo-100 p-5 md:p-6">
+          <div class="flex gap-4 items-start">
+            <div class="text-3xl">💬</div>
+            <div>
+              <p class="font-black text-indigo-800">Pesan dari Pixel</p>
+              <p class="mt-1 font-bold text-slate-700">“Perhatikan contoh-contohnya. Setelah ini, kita akan menguji apakah kamu bisa mengenali AI di sekitar kita.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button id="next2" class="next-btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Masuk Game →</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="step3" class="step-section hidden-page">
+      <div class="glass section-card rounded-[2rem] p-5 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-black">🎮 GAME</span>
+            <h2 class="text-3xl md:text-4xl font-black mt-3">Detektif AI</h2>
+            <p class="mt-2 text-lg font-semibold text-slate-600">Sentuh kartu, lalu pilih <b>AI</b> atau <b>Bukan AI</b>.</p>
+          </div>
+          <div class="rounded-2xl bg-white border-2 border-amber-200 px-4 py-3">
+            <p class="text-xs uppercase tracking-wide font-black text-amber-700">Skor</p>
+            <p class="text-2xl font-black text-amber-900"><span id="gameScore">0</span> / <span id="gameTotal">5</span></p>
+          </div>
+        </div>
+
+        <div id="gameArea" class="mt-7"></div>
+
+        <div id="gameComplete" class="hidden mt-7 rounded-[2rem] bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 md:p-8 text-center">
+          <div class="text-6xl">🎉</div>
+          <h3 class="text-3xl md:text-4xl font-black mt-3">Mission Detektif Selesai!</h3>
+          <p class="mt-3 text-white/90 text-lg font-semibold">Kamu sudah mencoba membedakan teknologi yang menggunakan AI dan yang tidak.</p>
+          <div class="mt-5 inline-flex items-center gap-3 bg-white/15 rounded-full px-5 py-3 font-black">
+            ⭐ Skor kamu: <span id="finalScore">0</span>/5
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button id="next3" class="hidden next-btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Lanjut →</button>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section id="step4" class="step-section hidden-page">
+      <div class="glass section-card rounded-[2rem] p-5 md:p-8">
+        <span class="inline-flex px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-black">🤔 KARTU MISTERI</span>
+        <h2 class="text-3xl md:text-4xl font-black mt-3">Tidak Semua yang Pintar adalah AI</h2>
+        <p class="mt-3 text-lg font-semibold text-slate-600">Beberapa teknologi terlihat “pintar”, padahal belum tentu memakai AI. Dengarkan petunjuk Pixel!</p>
+
+        <div class="mt-7 max-w-2xl mx-auto">
+          <article class="rounded-[1.7rem] bg-white border-2 border-slate-200 p-5">
+            <div class="text-5xl">📷</div>
+            <h3 class="text-2xl font-black mt-3">Kamera HP</h3>
+            <p class="mt-2 font-semibold text-slate-600">Apakah seluruh kamera HP pasti AI?</p>
+            <button id="cameraReveal" class="mt-5 w-full px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black disabled:opacity-60 disabled:cursor-not-allowed">🔊 Panggil Pixel untuk Petunjuk</button>
+            <div id="cameraInfo" class="hidden mt-4 rounded-2xl bg-sky-50 border border-sky-100 p-4" aria-live="polite">
+              <p class="font-bold text-slate-700">Tergantung fiturnya. Kamera dapat bekerja tanpa AI, tetapi beberapa fitur seperti pengenalan wajah atau pemrosesan gambar dapat menggunakan AI.</p>
+              <p class="mt-2 font-black text-sky-700">Pesan Pixel: “Perhatikan fungsi teknologinya, bukan hanya namanya.”</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-7 rounded-[1.7rem] bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 md:p-7 text-center">
+          <div class="text-5xl">🎯</div>
+          <h3 class="text-2xl md:text-3xl font-black mt-3">Kamu sudah mengenali dasar-dasar AI.</h3>
+          <p class="mt-2 text-white/90 font-semibold">Sekarang kita lanjut ke materi berikutnya: memahami untung dan rugi penggunaan AI.</p>
+          <button id="next4" disabled class="next-btn mt-6 inline-flex items-center gap-3 bg-white text-indigo-700 hover:bg-indigo-50 px-7 py-4 rounded-full text-lg font-black shadow-xl">Ke Mission 2 — Untung-Rugi AI →</button>
+          <p id="next4Hint" class="mt-3 text-sm font-bold text-white/80">Dengarkan petunjuk Pixel sampai selesai.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-10 pb-6 text-center">
+      <p class="text-sm font-bold text-slate-500">KKA • Pak Lim • Pixel</p>
+    </footer>
+  </main>
+</section>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const steps = ['step1','step2','step3','step4'];
+let current = 0;
+let score = 0;
+let answerAChosen = false;
+let gameIndex = 0;
+let gameScore = 0;
+let cameraDone = false;    // penjelasan kamera sudah didengar sampai selesai
+
+/* ============ SUARA PIXEL ============ */
+let voiceOn = true;
+let speaking = false;
+let speakToken = 0;
+let currentSpeech = null;
+let idVoice = null;
+
+function loadVoice(){
+  try{
+    const v = window.speechSynthesis.getVoices();
+    idVoice = v.find(x => x.lang && x.lang.toLowerCase().startsWith('id')) || null;
+  }catch(e){}
+}
+if('speechSynthesis' in window){
+  loadVoice();
+  window.speechSynthesis.onvoiceschanged = loadVoice;
+}
+
+// Berbicara per kalimat (lebih stabil) dan memanggil onDone SETELAH selesai.
+function speak(text, onDone){
+  const token = ++speakToken;
+  speaking = true;
+  let finished = false, timer = null;
+
+  const finish = () => {
+    if(finished) return;
+    finished = true;
+    speaking = false;
+    clearTimeout(timer);
+    if(currentSpeech && currentSpeech.finish === finish) currentSpeech = null;
+    if(onDone) onDone();
+    refreshGates();
+  };
+  currentSpeech = { finish };
+  const est = Math.max(2200, text.length * 75);
+
+  try{
+    if(voiceOn && 'speechSynthesis' in window){
+      window.speechSynthesis.cancel();
+      const parts = text.match(/[^.!?]+[.!?]*/g) || [text];
+      parts.forEach((part, i) => {
+        const u = new SpeechSynthesisUtterance(part.trim());
+        u.lang = 'id-ID';
+        if(idVoice) u.voice = idVoice;
+        u.rate = 0.92; u.pitch = 1.08; u.volume = 1;
+        const done = () => { if(token === speakToken && i === parts.length - 1) finish(); };
+        u.onend = done;
+        u.onerror = done;
+        window.speechSynthesis.speak(u);
+      });
+      timer = setTimeout(() => { if(token === speakToken) finish(); }, est * 1.5 + 4000); // pengaman
+      refreshGates();
+      return;
+    }
+  }catch(e){}
+  // Suara mati / tidak didukung: beri waktu baca dulu
+  timer = setTimeout(() => { if(token === speakToken) finish(); }, Math.max(2000, text.length * 45));
+  refreshGates();
+}
+function stopSpeak(){
+  speakToken++;
+  speaking = false;
+  currentSpeech = null;
+  try{ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){}
+}
+
+$('voiceBtn').onclick = () => {
+  voiceOn = !voiceOn;
+  $('voiceBtn').textContent = voiceOn ? '🔊 Suara' : '🔇 Mati';
+  $('voiceBtn').setAttribute('aria-pressed', String(voiceOn));
+  if(!voiceOn && currentSpeech){
+    const c = currentSpeech;
+    stopSpeak();
+    c.finish();      // jangan sampai tombol "lanjut" tertahan
+  }
+};
+
+/* ============ GERBANG TOMBOL ============ */
+function refreshGates(){
+  const ready = cameraDone && !speaking;
+  $('next4').disabled = !ready;
+  $('next4Hint').classList.toggle('hidden', ready);
+  $('cameraReveal').disabled = speaking;
+  $('callPixelSkill').disabled = speaking;
+}
+
+/* ============ DATA GAME ============ */
+const gameCards = [
+  {
+    icon:'🗺️', title:'Peta di Ponsel',
+    prompt:'Sistem peta dapat menggunakan data lalu lintas untuk membantu memilih rute.',
+    answer:'ai',
+    correct:'Tepat! Sistem tertentu pada peta dapat menggunakan data untuk membantu menentukan rute.',
+    hint:'Petunjuk: apakah sistem memanfaatkan data untuk membantu membuat pilihan?',
+    wrong:'Coba pikirkan lagi. Sistem peta dapat menggunakan data lalu lintas untuk membantu menentukan pilihan rute.'
+  },
+  {
+    icon:'📺', title:'Rekomendasi Video',
+    prompt:'Sistem menyarankan video berdasarkan kebiasaan tontonanmu.',
+    answer:'ai',
+    correct:'Tepat! Sistem rekomendasi dapat mempelajari pola dari data untuk menyarankan konten.',
+    hint:'Petunjuk: apakah sistem memakai data kebiasaanmu?',
+    wrong:'Coba lagi. Dari mana video itu bisa muncul sesuai seleramu?'
+  },
+  {
+    icon:'📖', title:'Buku Cetak',
+    prompt:'Buku cetak menyajikan informasi yang sudah ditulis manusia.',
+    answer:'notai',
+    correct:'Tepat! Buku cetak tidak memproses pertanyaan dan menghasilkan jawaban sendiri.',
+    hint:'Petunjuk: apakah buku dapat memproses pertanyaanmu?',
+    wrong:'Coba lagi. Apakah buku cetak bisa menjawab saat kamu bertanya?'
+  },
+  {
+    icon:'🔦', title:'Senter Otomatis',
+    prompt:'Senter menyala saat gelap dan mati saat terang berdasarkan aturan tetap.',
+    answer:'notai',
+    correct:'Tepat! Sistem seperti ini dapat hanya mengikuti aturan tetap: gelap, nyala. Terang, mati.',
+    hint:'Petunjuk: apakah sistem belajar dari data atau hanya mengikuti aturan tetap?',
+    wrong:'Coba pikirkan lagi. Apakah senter belajar, atau hanya mengikuti satu aturan?'
+  },
+  {
+    icon:'🧮', title:'Kalkulator',
+    prompt:'Kalkulator menghitung sesuai operasi dan aturan matematika yang diprogram.',
+    answer:'notai',
+    correct:'Tepat! Kalkulator dapat bekerja dengan aturan perhitungan yang sudah diprogram.',
+    hint:'Petunjuk: apakah kalkulator perlu belajar dari contoh untuk menjumlahkan?',
+    wrong:'Coba lagi. Apakah kalkulator belajar dari data, atau menjalankan aturan perhitungan?'
+  }
+];
+$('gameTotal').textContent = gameCards.length;
+
+/* ============ UMUM ============ */
+function updateProgress() {
+  const n = current + 1;
+  $('progressText').textContent = n + '/' + steps.length;
+  $('progressBar').style.width = (n / steps.length * 100) + '%';
+}
+function addScore(n=1){
+  score += n;
+  $('score').textContent = score;
+}
+function showStep(index){
+  stopSpeak();                       // hentikan suara saat pindah halaman
+  steps.forEach((id,i)=>$(id).classList.toggle('hidden-page', i!==index));
+  current = index;
+  updateProgress();
+  refreshGates();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function celebrateButton(btn){
+  btn.classList.add('pulse-soft');
+  setTimeout(()=>btn.classList.remove('pulse-soft'),900);
+}
+
+$('startMission').onclick = () => {
+  $('introPage').classList.add('hidden-page');
+  $('mainPage').classList.remove('hidden-page');
+  showStep(0);
+};
+
+/* ============ STEP 1 ============ */
+$('imageInput').addEventListener('change', (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    $('uploadedImage').src = reader.result;
+    $('uploadedImage').classList.remove('hidden');
+    $('placeholderContent').classList.add('hidden');
+    $('imageSlot').classList.add('has-image');
+  };
+  reader.readAsDataURL(file);
+});
+
+document.querySelectorAll('.a-choice').forEach(btn=>{
+  btn.onclick = ()=>{
+    if(answerAChosen) return;
+    answerAChosen = true;
+    document.querySelectorAll('.a-choice').forEach(b=>{ b.disabled = true; b.classList.remove('correct','wrong'); });
+    const selected = btn.dataset.aAnswer;
+    const feedback = $('aFeedback');
+    feedback.classList.remove('hidden');
+    const aiBtn = document.querySelector('[data-a-answer="ai"]');
+
+    if(selected === 'ai'){
+      btn.classList.add('correct');
+      addScore(1);
+      feedback.className = 'mt-5 rounded-2xl p-5 bg-emerald-50 border border-emerald-200 text-emerald-900';
+      feedback.innerHTML = '<p class="font-black text-xl">✅ Buatan AI!</p><p class="mt-2 font-semibold">Gambar buatan AI bisa tampak sangat nyata. Karena itu kita harus <b>mengecek dulu</b>.</p>';
+    } else {
+      btn.classList.add('wrong');
+      feedback.className = 'mt-5 rounded-2xl p-5 bg-amber-50 border border-amber-200 text-amber-900';
+      feedback.innerHTML = '<p class="font-black text-xl">💡 Belum tepat.</p><p class="mt-2 font-semibold">Coba lihat petunjuk Pixel: jangan langsung percaya hanya karena gambar terlihat nyata.</p>';
+      setTimeout(()=>{
+        aiBtn.classList.add('correct');
+        feedback.innerHTML = '<p class="font-black text-xl">🤖 Buatan AI!</p><p class="mt-2 font-semibold">Gambar buatan AI bisa tampak sangat nyata. Karena itu kita harus <b>mengecek dulu</b>.</p>';
+      },700);
+    }
+    $('next1').classList.remove('hidden');
+  };
+});
+$('next1').onclick = ()=>showStep(1);
+
+/* ============ STEP 2 ============ */
+$('callPixelSkill').onclick = ()=>{
+  const msg = 'Halo! Aku Pixel. Yuk kita kenali tiga ide besar tentang AI. Pertama, AI sempit adalah AI yang pintar melakukan tugas tertentu. Contohnya asisten suara, penerjemah, rekomendasi video, dan peta. Kedua, AI generatif dapat membuat sesuatu dari perintah, misalnya teks dan gambar. Ketiga, AI umum dan AI super masih berupa gagasan dan penelitian. Jadi, saat melihat teknologi, jangan hanya melihat bahwa teknologi itu pintar. Perhatikan tugas dan cara kerjanya juga.';
+  const box = $('pixelSkillSpeech');
+  box.textContent = '🔊 Pixel: ' + msg;
+  box.classList.remove('hidden');
+  box.classList.add('talking');
+  speak(msg, () => box.classList.remove('talking'));
+  celebrateButton($('callPixelSkill'));
+};
+$('next2').onclick = ()=>{
+  renderGame();
+  showStep(2);
+};
+
+/* ============ STEP 3: GAME (tidak pindah soal sebelum Pixel selesai) ============ */
+function renderGame(){
+  const c = gameCards[gameIndex];
+  $('gameArea').innerHTML = `
+    <div class="rounded-[2rem] bg-white border-2 border-slate-100 p-5 md:p-7 pop">
+      <p class="text-center text-sm font-black text-slate-400">Soal ${gameIndex + 1} dari ${gameCards.length}</p>
+      <div class="text-7xl text-center mt-2">${c.icon}</div>
+      <h3 class="text-3xl font-black text-center mt-4">${c.title}</h3>
+      <p class="max-w-2xl mx-auto text-center mt-3 text-lg font-semibold text-slate-600">${c.prompt}</p>
+
+      <div class="grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto mt-7">
+        <button class="game-choice choice rounded-2xl border-2 border-slate-200 bg-white px-5 py-4 font-black text-xl" data-choice="ai">🤖 AI</button>
+        <button class="game-choice choice rounded-2xl border-2 border-slate-200 bg-white px-5 py-4 font-black text-xl" data-choice="notai">🧩 Bukan AI</button>
+      </div>
+
+      <div id="gameFeedback" class="hidden max-w-2xl mx-auto mt-5" aria-live="polite"></div>
+    </div>
+  `;
+  $('gameScore').textContent = gameScore;
+  document.querySelectorAll('.game-choice').forEach(btn=>{
+    btn.onclick = ()=>handleGameChoice(btn.dataset.choice, btn);
+  });
+}
+
+function handleGameChoice(choice, btn){
+  const c = gameCards[gameIndex];
+  const isLast = gameIndex === gameCards.length - 1;
+  document.querySelectorAll('.game-choice').forEach(b=>b.disabled=true);
+  const feedback = $('gameFeedback');
+  feedback.classList.remove('hidden');
+  let speech;
+
+  if(choice === c.answer){
+    btn.classList.add('correct');
+    gameScore++;
+    addScore(1);
+    feedback.className = 'max-w-2xl mx-auto mt-5 rounded-2xl p-5 bg-emerald-50 border border-emerald-200 pop';
+    speech = c.correct + ' Mantap!';
+    feedback.innerHTML = `<p class="font-black text-xl text-emerald-800">✅ ${c.correct}</p>`;
+  }else{
+    btn.classList.add('wrong');
+    document.querySelector(`.game-choice[data-choice="${c.answer}"]`).classList.add('correct');
+    feedback.className = 'max-w-2xl mx-auto mt-5 rounded-2xl p-5 bg-amber-50 border border-amber-200 pop';
+    speech = 'Belum tepat. ' + c.wrong + ' ' + c.hint;
+    feedback.innerHTML = `<p class="font-black text-xl text-amber-900">🔄 Belum tepat.</p><p class="mt-2 font-semibold text-amber-950">${c.wrong}</p><p class="mt-2 font-bold text-amber-900">${c.hint}</p>`;
+  }
+  feedback.insertAdjacentHTML('beforeend', `
+    <p id="pixelStatus" class="mt-3 font-bold text-slate-700 talking">🔊 Pixel sedang menjelaskan...</p>
+    <button id="nextQ" disabled class="next-btn mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">${isLast ? 'Lihat Hasil →' : 'Soal Berikutnya →'}</button>`);
+  $('gameScore').textContent = gameScore;
+
+  $('nextQ').onclick = ()=>{
+    stopSpeak();
+    gameIndex++;
+    if(gameIndex < gameCards.length){
+      renderGame();
+    }else{
+      $('gameArea').classList.add('hidden');
+      $('finalScore').textContent = gameScore;
+      $('gameComplete').classList.remove('hidden');
+      $('next3').classList.remove('hidden');
+    }
+  };
+
+  // Tombol lanjut baru aktif setelah Pixel selesai berbicara
+  speak(speech, ()=>{
+    const s = $('pixelStatus'), n = $('nextQ');
+    if(s){ s.classList.remove('talking'); s.textContent = '✅ Pixel selesai menjelaskan.'; }
+    if(n){ n.disabled = false; n.focus({preventScroll:true}); }
+  });
+}
+$('next3').onclick = ()=>showStep(3);
+
+/* ============ STEP 4: KARTU MISTERI (kamera HP) ============ */
+$('cameraReveal').onclick = ()=>{
+  if(speaking) return;
+  $('cameraInfo').classList.remove('hidden');
+  const speech = 'Petunjuk dari Pixel. Kamera HP tidak selalu menggunakan AI. Kamera dapat bekerja tanpa AI, tetapi beberapa fitur seperti pengenalan wajah atau pemrosesan gambar dapat menggunakan AI. Jadi, perhatikan fungsi teknologinya, bukan hanya namanya.';
+  $('cameraReveal').textContent = '🔊 Pixel sedang menjelaskan...';
+  celebrateButton($('cameraReveal'));
+  speak(speech, ()=>{
+    cameraDone = true;
+    $('cameraReveal').textContent = '🔁 Dengarkan Pixel Lagi';
+  });
+};
+
+$('next4').onclick = ()=>{
+  stopSpeak();
+  window.location.href = 'subbab2.html';
+};
+
+updateProgress();
+refreshGates();
+</script>
+</body>
+</html>
