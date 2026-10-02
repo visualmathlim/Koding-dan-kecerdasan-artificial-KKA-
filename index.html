@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halo! Aku Pixel - Kelas KKA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        'pastel-blue': '#dbeafe',
+                        'pastel-yellow': '#fef08a',
+                        'pastel-green': '#d1fae5',
+                        'primary': '#4f46e5',
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'slide-in': 'slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(-100%) scale(0.5)', opacity: '0' },
+                            '100%': { transform: 'translateX(0) scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow-x: hidden;
+        }
+        
+        /* Animasi untuk lingkaran pernapasan */
+        @keyframes breathIn {
+            0% { transform: scale(1); background-color: #a7f3d0; box-shadow: 0 0 0 0 rgba(167, 243, 208, 0.7); }
+            100% { transform: scale(1.8); background-color: #34d399; box-shadow: 0 0 30px 20px rgba(52, 211, 153, 0.4); }
+        }
+        
+        @keyframes breathOut {
+            0% { transform: scale(1.8); background-color: #34d399; box-shadow: 0 0 30px 20px rgba(52, 211, 153, 0.4); }
+            100% { transform: scale(1); background-color: #a7f3d0; box-shadow: 0 0 0 0 rgba(167, 243, 208, 0); }
+        }
+        
+        .breathe-in {
+            animation: breathIn 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .breathe-out {
+            animation: breathOut 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Transisi fade in */
+        .fade-transition {
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .hidden-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
+        }
+        .visible-fade {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* Styling spesifik untuk menyembunyikan dan menampilkan layar */
+        #intro-screen, #main-screen {
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans text-slate-800 selection:bg-indigo-200 selection:text-indigo-900">
+
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pastel-blue">
+        <div class="text-center px-6">
+            <div class="text-6xl mb-6 animate-bounce">🏫</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-800 mb-8 tracking-tight">Selamat Datang di<br>Kelas KKA!</h1>
+            <p class="text-lg text-indigo-600 font-medium mb-10">Koding dan Kecerdasan Artifisial</p>
+            
+            <button onclick="startExperience()" class="group bg-indigo-600 hover:bg-indigo-700 text-white text-xl md:text-2xl font-bold py-5 px-10 rounded-full shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-1 transition-all duration-300 ring-4 ring-indigo-200 flex items-center gap-3 mx-auto">
+                <span>Panggil Asisten Pak Amir</span>
+                <span class="text-3xl group-hover:rotate-12 transition-transform">👋</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="hidden opacity-0 min-h-screen flex flex-col w-full">
+        
+        <!-- Header -->
+        <header class="w-full bg-white/90 backdrop-blur-sm shadow-sm py-4 px-6 fixed top-0 z-20 border-b border-indigo-100">
+            <div class="max-w-5xl mx-auto flex items-center justify-center md:justify-start gap-3">
+                <span class="text-2xl bg-indigo-100 p-1.5 rounded-lg">🎓</span>
+                <h1 class="text-sm md:text-base font-bold text-slate-700 text-center md:text-left">
+                    Koding dan Kecerdasan Artifisial (KKA) 
+                    <span class="hidden md:inline text-slate-300 mx-2">|</span> 
+                    <br class="md:hidden">
+                    <span class="text-indigo-600 font-semibold">Guru Pengampu: Amir Salim, S.Si.</span>
+                </h1>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center pt-28 pb-12 px-4 max-w-5xl mx-auto w-full text-center">
+            
+            <div id="hero-section" class="mb-12 w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+                
+                <!-- SVG Robot Pixel (Akan dianimasikan masuk) -->
+                <div id="pixel-mascot" class="relative z-10 shrink-0 opacity-0">
+                    <div class="animate-float">
+                        <svg viewBox="0 0 120 120" class="w-40 h-40 md:w-52 md:h-52 drop-shadow-2xl">
+                            <!-- Antenna Glow -->
+                            <circle cx="60" cy="15" r="8" fill="#fcd34d" class="animate-pulse opacity-60"/>
+                            <!-- Antenna -->
+                            <line x1="60" y1="30" x2="60" y2="15" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="60" cy="15" r="5" fill="#f59e0b"/>
+                            <!-- Head -->
+                            <rect x="25" y="30" width="70" height="60" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+                            <!-- Ears -->
+                            <rect x="15" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+                            <rect x="95" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+                            <!-- Screen/Face -->
+                            <rect x="35" y="42" width="50" height="36" rx="10" fill="#1e293b"/>
+                            <!-- Eyes -->
+                            <path d="M 42 55 Q 46 50 50 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+                            <path d="M 70 55 Q 74 50 78 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+                            <!-- Blush -->
+                            <ellipse cx="43" cy="65" rx="4" ry="2" fill="#ef4444" opacity="0.4"/>
+                            <ellipse cx="77" cy="65" rx="4" ry="2" fill="#ef4444" opacity="0.4"/>
+                            <!-- Smile -->
+                            <path d="M 52 65 Q 60 70 68 65" stroke="#34d399" stroke-width="3" fill="transparent" stroke-linecap="round"/>
+                            <!-- Body base -->
+                            <path d="M 40 90 L 80 90 L 90 120 L 30 120 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
+                            <circle cx="60" cy="105" r="6" fill="#38bdf8"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Speech Bubble -->
+                <div id="speech-bubble" class="hidden-fade fade-transition relative bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-indigo-50 text-left max-w-xl">
+                    <div class="absolute w-8 h-8 bg-white border-b-4 border-l-4 border-indigo-50 transform rotate-45 top-1/2 -left-4.5 -mt-4 hidden md:block" style="left: -18px;"></div>
+                    <div class="absolute w-8 h-8 bg-white border-t-4 border-l-4 border-indigo-50 transform rotate-45 -top-4.5 left-1/2 -ml-4 md:hidden" style="top: -18px;"></div>
+                    
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-600 mb-3 tracking-tight flex items-center gap-2">
+                        <span>Halo!</span> <span id="speaking-indicator" class="hidden flex space-x-1"><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></span><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span></span>
+                    </h2>
+                    
+                    <!-- Teks Dinamis -->
+                    <div id="pixel-text" class="text-lg md:text-xl text-slate-700 leading-relaxed font-medium min-h-[80px]">
+                        <!-- Teks akan diisi oleh JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="interactive-section" class="w-full flex flex-col items-center justify-center mb-10 min-h-[200px]">
+                
+                <!-- Tombol Napas (Muncul setelah Pixel bicara) -->
+                <button id="btn-napas" onclick="startBreathingRoutine()" class="hidden-fade fade-transition group bg-gradient-to-b from-teal-400 to-teal-600 hover:from-teal-500 hover:to-teal-700 text-white text-xl md:text-2xl font-bold py-4 px-8 rounded-full shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-1 transition-all duration-300 ring-4 ring-teal-100 flex items-center gap-3">
+                    <span>Mulai Napas 3 Kali</span>
+                    <span class="text-3xl">🧘‍♂️</span>
+                </button>
+
+                <!-- Animasi Lingkaran Napas -->
+                <div id="breath-container" class="hidden flex-col items-center justify-center w-full">
+                    <div class="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center mb-10 mt-6">
+                        <div class="absolute inset-0 border-4 border-dashed border-emerald-200 rounded-full opacity-50"></div>
+                        <div id="breath-circle" class="w-full h-full rounded-full flex items-center justify-center z-10 relative bg-emerald-200">
+                            <span id="breath-text" class="text-xl md:text-2xl font-extrabold text-teal-900 text-center z-
