@@ -1,189 +1,199 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halo! Aku Pixel - Kelas KKA</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Quicksand', 'sans-serif'],
-                    },
-                    colors: {
-                        'pastel-blue': '#dbeafe',
-                        'pastel-yellow': '#fef08a',
-                        'pastel-green': '#d1fae5',
-                        'primary': '#4f46e5',
-                    },
-                    animation: {
-                        'float': 'float 4s ease-in-out infinite',
-                        'slide-in': 'slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' },
-                        },
-                        slideIn: {
-                            '0%': { transform: 'translateX(-100%) scale(0.5)', opacity: '0' },
-                            '100%': { transform: 'translateX(0) scale(1)', opacity: '1' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halo! Aku Pixel — Belajar KKA Bersama Pak Lim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Quicksand','sans-serif']}}}}
+</script>
+<style>
+html,body{min-height:100%}
+body{font-family:Quicksand,system-ui,sans-serif;background:#e8f4ff;overflow-x:hidden}
 
-    <style>
-        body {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-            background-size: 30px 30px;
-            overflow-x: hidden;
-        }
-        
-        /* Animasi untuk lingkaran pernapasan */
-        @keyframes breathIn {
-            0% { transform: scale(1); background-color: #a7f3d0; box-shadow: 0 0 0 0 rgba(167, 243, 208, 0.7); }
-            100% { transform: scale(1.8); background-color: #34d399; box-shadow: 0 0 30px 20px rgba(52, 211, 153, 0.4); }
-        }
-        
-        @keyframes breathOut {
-            0% { transform: scale(1.8); background-color: #34d399; box-shadow: 0 0 30px 20px rgba(52, 211, 153, 0.4); }
-            100% { transform: scale(1); background-color: #a7f3d0; box-shadow: 0 0 0 0 rgba(167, 243, 208, 0); }
-        }
-        
-        .breathe-in {
-            animation: breathIn 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        .breathe-out {
-            animation: breathOut 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+/* ===== LATAR BELAKANG BERLAPIS ===== */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:
+   radial-gradient(circle at 15% 12%,rgba(255,236,150,.85) 0,rgba(255,236,150,0) 22%),
+   linear-gradient(180deg,#cfe8ff 0%,#e4f3ff 38%,#e6fbf1 72%,#fff3dd 100%)}
+#bg .grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(79,70,229,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(79,70,229,.07) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,transparent 70%);mask-image:linear-gradient(180deg,#000 0%,transparent 70%)}
+#bg .blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:#c4b5fd;top:8%;right:-80px}
+.b2{width:300px;height:300px;background:#99f6e4;bottom:18%;left:-90px;animation-delay:-6s}
+.b3{width:220px;height:220px;background:#fde68a;top:46%;right:22%;animation-delay:-11s}
+@keyframes drift{to{transform:translate(40px,-30px) scale(1.12)}}
+#bg .sym{position:absolute;font-weight:800;color:rgba(79,70,229,.22);animation:rise linear infinite;user-select:none}
+@keyframes rise{from{transform:translateY(0) rotate(0)}to{transform:translateY(-115vh) rotate(25deg)}}
+#bg svg.hills{position:absolute;bottom:0;left:0;width:100%;height:30vh;min-height:150px}
+.cloud{position:absolute;animation:cloud 60s linear infinite;opacity:.9}
+@keyframes cloud{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
 
-        /* Transisi fade in */
-        .fade-transition {
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .hidden-fade {
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
-            position: absolute;
-        }
-        .visible-fade {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-            position: relative;
-        }
+/* ===== MASKOT & UI ===== */
+.float{animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-14px)}}
+@keyframes slideIn{from{transform:translateX(-120%) scale(.5);opacity:0}to{transform:none;opacity:1}}
+.slide-in{animation:slideIn 1s cubic-bezier(.175,.885,.32,1.275) forwards}
+.fade{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.fade.show{opacity:1;transform:none;pointer-events:auto}
+.gone{display:none!important}
+.glass{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 
-        /* Styling spesifik untuk menyembunyikan dan menampilkan layar */
-        #intro-screen, #main-screen {
-            transition: opacity 0.5s ease;
-        }
-    </style>
+@keyframes breathIn{from{transform:scale(1);background:#a7f3d0}to{transform:scale(1.7);background:#34d399;box-shadow:0 0 40px 18px rgba(52,211,153,.4)}}
+@keyframes breathOut{from{transform:scale(1.7);background:#34d399;box-shadow:0 0 40px 18px rgba(52,211,153,.4)}to{transform:scale(1);background:#a7f3d0}}
+.in{animation:breathIn 3.5s cubic-bezier(.4,0,.2,1) forwards}
+.out{animation:breathOut 3.5s cubic-bezier(.4,0,.2,1) forwards}
+
+button:focus-visible,a:focus-visible{outline:4px solid #fbbf24;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){#bg .blob,#bg .sym,.cloud,.float{animation:none!important}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col font-sans text-slate-800 selection:bg-indigo-200 selection:text-indigo-900">
+<body class="text-slate-800">
 
-    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pastel-blue">
-        <div class="text-center px-6">
-            <div class="text-6xl mb-6 animate-bounce">🏫</div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-800 mb-8 tracking-tight">Selamat Datang di<br>Kelas KKA!</h1>
-            <p class="text-lg text-indigo-600 font-medium mb-10">Koding dan Kecerdasan Artifisial</p>
-            
-            <button onclick="startExperience()" class="group bg-indigo-600 hover:bg-indigo-700 text-white text-xl md:text-2xl font-bold py-5 px-10 rounded-full shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-1 transition-all duration-300 ring-4 ring-indigo-200 flex items-center gap-3 mx-auto">
-                <span>Panggil Asisten Pak Amir</span>
-                <span class="text-3xl group-hover:rotate-12 transition-transform">👋</span>
-            </button>
-        </div>
+<!-- LATAR -->
+<div id="bg" aria-hidden="true">
+  <div class="grid"></div>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <svg class="cloud" style="top:14%" width="140" height="60" viewBox="0 0 140 60"><path d="M25 50a18 18 0 0 1 4-35 24 24 0 0 1 46-4 20 20 0 0 1 36 12 14 14 0 0 1 4 27z" fill="#fff"/></svg>
+  <svg class="cloud" style="top:30%;animation-duration:85s;animation-delay:-30s;transform:scale(.7)" width="140" height="60" viewBox="0 0 140 60"><path d="M25 50a18 18 0 0 1 4-35 24 24 0 0 1 46-4 20 20 0 0 1 36 12 14 14 0 0 1 4 27z" fill="#fff"/></svg>
+  <div id="syms"></div>
+  <svg class="hills" viewBox="0 0 1440 300" preserveAspectRatio="none">
+    <path d="M0 150Q200 60 420 140T860 120T1250 90T1440 130V300H0z" fill="#bbf7d0" opacity=".7"/>
+    <path d="M0 210Q260 130 520 200T980 190T1440 180V300H0z" fill="#86efac" opacity=".75"/>
+    <path d="M0 260Q300 210 600 250T1100 245T1440 250V300H0z" fill="#4ade80" opacity=".6"/>
+  </svg>
+</div>
+
+<!-- LAYAR PEMBUKA -->
+<div id="intro" class="fixed inset-0 z-50 flex items-center justify-center" style="background:linear-gradient(160deg,#c7e3ff,#e0d8ff 60%,#fff0cc)">
+  <div class="text-center px-6">
+    <div class="text-6xl mb-5 float" aria-hidden="true">🏫</div>
+    <h1 class="text-4xl md:text-6xl font-extrabold text-indigo-800 mb-4 leading-tight">Selamat Datang di<br>Kelas KKA!</h1>
+    <p class="text-lg md:text-xl text-indigo-700 font-semibold mb-3">Koding dan Kecerdasan Artifisial</p>
+    <p class="text-sm md:text-base text-slate-600 font-semibold mb-10">Belajar AI dengan rasa ingin tahu, kreativitas, dan tanggung jawab.</p>
+    <button id="startBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xl md:text-2xl font-extrabold py-5 px-10 rounded-full shadow-xl ring-4 ring-indigo-200 transition active:translate-y-1 flex items-center gap-3 mx-auto">
+      <span>Panggil Pixel</span><span class="text-3xl" aria-hidden="true">👋</span>
+    </button>
+  </div>
+</div>
+
+<!-- HALAMAN UTAMA -->
+<div id="main" class="gone relative z-10 min-h-screen flex-col w-full">
+  <header class="glass fixed top-0 inset-x-0 z-20 shadow-md border-b-2 border-indigo-100 py-3 px-4">
+    <div class="max-w-5xl mx-auto flex items-center gap-3">
+      <span class="text-2xl bg-indigo-100 p-1.5 rounded-lg" aria-hidden="true">🎓</span>
+      <p class="text-sm md:text-base font-bold text-slate-700 leading-tight">Koding dan Kecerdasan Artifisial (KKA)<br class="md:hidden"><span class="hidden md:inline text-slate-300 mx-2">|</span><span class="text-indigo-600">Guru Pengampu: Amir Salim, S.Si.</span></p>
+      <button id="voiceBtn" class="ml-auto bg-white border-2 border-indigo-200 rounded-full w-11 h-11 text-xl" aria-pressed="true" aria-label="Suara Pixel menyala">🔊</button>
     </div>
+  </header>
 
-    <div id="main-screen" class="hidden opacity-0 min-h-screen flex flex-col w-full">
-        
-        <!-- Header -->
-        <header class="w-full bg-white/90 backdrop-blur-sm shadow-sm py-4 px-6 fixed top-0 z-20 border-b border-indigo-100">
-            <div class="max-w-5xl mx-auto flex items-center justify-center md:justify-start gap-3">
-                <span class="text-2xl bg-indigo-100 p-1.5 rounded-lg">🎓</span>
-                <h1 class="text-sm md:text-base font-bold text-slate-700 text-center md:text-left">
-                    Koding dan Kecerdasan Artifisial (KKA) 
-                    <span class="hidden md:inline text-slate-300 mx-2">|</span> 
-                    <br class="md:hidden">
-                    <span class="text-indigo-600 font-semibold">Guru Pengampu: Amir Salim, S.Si.</span>
-                </h1>
-            </div>
-        </header>
+  <main class="flex-grow flex flex-col items-center pt-28 pb-16 px-4 max-w-5xl mx-auto w-full text-center">
 
-        <main class="flex-grow flex flex-col items-center pt-28 pb-12 px-4 max-w-5xl mx-auto w-full text-center">
-            
-            <div id="hero-section" class="mb-12 w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
-                
-                <!-- SVG Robot Pixel (Akan dianimasikan masuk) -->
-                <div id="pixel-mascot" class="relative z-10 shrink-0 opacity-0">
-                    <div class="animate-float">
-                        <svg viewBox="0 0 120 120" class="w-40 h-40 md:w-52 md:h-52 drop-shadow-2xl">
-                            <!-- Antenna Glow -->
-                            <circle cx="60" cy="15" r="8" fill="#fcd34d" class="animate-pulse opacity-60"/>
-                            <!-- Antenna -->
-                            <line x1="60" y1="30" x2="60" y2="15" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
-                            <circle cx="60" cy="15" r="5" fill="#f59e0b"/>
-                            <!-- Head -->
-                            <rect x="25" y="30" width="70" height="60" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
-                            <!-- Ears -->
-                            <rect x="15" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
-                            <rect x="95" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
-                            <!-- Screen/Face -->
-                            <rect x="35" y="42" width="50" height="36" rx="10" fill="#1e293b"/>
-                            <!-- Eyes -->
-                            <path d="M 42 55 Q 46 50 50 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
-                            <path d="M 70 55 Q 74 50 78 55" stroke="#34d399" stroke-width="4" fill="transparent" stroke-linecap="round"/>
-                            <!-- Blush -->
-                            <ellipse cx="43" cy="65" rx="4" ry="2" fill="#ef4444" opacity="0.4"/>
-                            <ellipse cx="77" cy="65" rx="4" ry="2" fill="#ef4444" opacity="0.4"/>
-                            <!-- Smile -->
-                            <path d="M 52 65 Q 60 70 68 65" stroke="#34d399" stroke-width="3" fill="transparent" stroke-linecap="round"/>
-                            <!-- Body base -->
-                            <path d="M 40 90 L 80 90 L 90 120 L 30 120 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
-                            <circle cx="60" cy="105" r="6" fill="#38bdf8"/>
-                        </svg>
-                    </div>
-                </div>
+    <section class="mb-10 w-full flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+      <div id="mascot" class="shrink-0 opacity-0">
+        <div class="float">
+          <svg viewBox="0 0 120 120" class="w-40 h-40 md:w-56 md:h-56 drop-shadow-2xl" role="img" aria-label="Pixel, robot sahabat belajar kelas">
+            <circle cx="60" cy="15" r="9" fill="#fcd34d" opacity=".6"/>
+            <line x1="60" y1="30" x2="60" y2="15" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="60" cy="15" r="5" fill="#f59e0b"/>
+            <rect x="25" y="30" width="70" height="60" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+            <rect x="15" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+            <rect x="95" y="50" width="10" height="20" rx="4" fill="#94a3b8" stroke="#64748b" stroke-width="3"/>
+            <rect x="35" y="42" width="50" height="36" rx="10" fill="#1e293b"/>
+            <path d="M42 55Q46 50 50 55" stroke="#34d399" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M70 55Q74 50 78 55" stroke="#34d399" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <ellipse cx="43" cy="65" rx="4" ry="2" fill="#ef4444" opacity=".4"/><ellipse cx="77" cy="65" rx="4" ry="2" fill="#ef4444" opacity=".4"/>
+            <path d="M52 65Q60 70 68 65" stroke="#34d399" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M40 90L80 90L90 120L30 120Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
+            <circle cx="60" cy="105" r="6" fill="#38bdf8"/>
+          </svg>
+          <div class="mt-2 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 shadow-lg border border-indigo-100 text-sm font-extrabold text-indigo-700">⚡ PIXEL • Teman Belajar AI</div>
+        </div>
+      </div>
 
-                <!-- Speech Bubble -->
-                <div id="speech-bubble" class="hidden-fade fade-transition relative bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-indigo-50 text-left max-w-xl">
-                    <div class="absolute w-8 h-8 bg-white border-b-4 border-l-4 border-indigo-50 transform rotate-45 top-1/2 -left-4.5 -mt-4 hidden md:block" style="left: -18px;"></div>
-                    <div class="absolute w-8 h-8 bg-white border-t-4 border-l-4 border-indigo-50 transform rotate-45 -top-4.5 left-1/2 -ml-4 md:hidden" style="top: -18px;"></div>
-                    
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-600 mb-3 tracking-tight flex items-center gap-2">
-                        <span>Halo!</span> <span id="speaking-indicator" class="hidden flex space-x-1"><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></span><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span></span>
-                    </h2>
-                    
-                    <!-- Teks Dinamis -->
-                    <div id="pixel-text" class="text-lg md:text-xl text-slate-700 leading-relaxed font-medium min-h-[80px]">
-                        <!-- Teks akan diisi oleh JS -->
-                    </div>
-                </div>
-            </div>
+      <div id="bubble" class="fade relative glass rounded-3xl p-6 md:p-8 shadow-xl border-4 border-white text-left max-w-xl">
+        <div class="absolute w-8 h-8 bg-white rotate-45 hidden md:block" style="left:-14px;top:50%;margin-top:-16px"></div>
+        <div class="absolute w-8 h-8 bg-white rotate-45 md:hidden" style="top:-14px;left:50%;margin-left:-16px"></div>
+        <h2 class="relative text-2xl md:text-3xl font-extrabold text-indigo-600 mb-3 flex items-center gap-3">
+          Halo, aku Pixel! 🤖✨
+          <span id="dots" class="gone items-center gap-1" aria-hidden="true"><i class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></i><i class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay:.1s"></i><i class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay:.2s"></i></span>
+        </h2>
+        <p id="pixelText" class="relative text-lg md:text-xl leading-relaxed font-semibold text-slate-700 min-h-[120px]"></p>
+        <div class="relative mt-4 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-2 text-sm font-extrabold text-indigo-700 border border-indigo-100">💬 Pesan dari Pixel: belajar dengan berani, berpikir bijak!</div>
+      </div>
+    </section>
 
-            <div id="interactive-section" class="w-full flex flex-col items-center justify-center mb-10 min-h-[200px]">
-                
-                <!-- Tombol Napas (Muncul setelah Pixel bicara) -->
-                <button id="btn-napas" onclick="startBreathingRoutine()" class="hidden-fade fade-transition group bg-gradient-to-b from-teal-400 to-teal-600 hover:from-teal-500 hover:to-teal-700 text-white text-xl md:text-2xl font-bold py-4 px-8 rounded-full shadow-xl hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-1 transition-all duration-300 ring-4 ring-teal-100 flex items-center gap-3">
-                    <span>Mulai Napas 3 Kali</span>
-                    <span class="text-3xl">🧘‍♂️</span>
-                </button>
+    <section id="interactive" class="w-full flex flex-col items-center min-h-[200px]">
+      <button id="napasBtn" class="fade bg-gradient-to-b from-teal-400 to-teal-600 hover:from-teal-500 hover:to-teal-700 text-white text-xl md:text-2xl font-extrabold py-4 px-8 rounded-full shadow-xl ring-4 ring-white transition active:translate-y-1 flex items-center gap-3">
+        <span>Mulai Napas 3 Kali</span><span class="text-3xl" aria-hidden="true">🧘</span>
+      </button>
 
-                <!-- Animasi Lingkaran Napas -->
-                <div id="breath-container" class="hidden flex-col items-center justify-center w-full">
-                    <div class="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center mb-10 mt-6">
-                        <div class="absolute inset-0 border-4 border-dashed border-emerald-200 rounded-full opacity-50"></div>
-                        <div id="breath-circle" class="w-full h-full rounded-full flex items-center justify-center z-10 relative bg-emerald-200">
-                            <span id="breath-text" class="text-xl md:text-2xl font-extrabold text-teal-900 text-center z-
+      <div id="breath" class="gone flex-col items-center w-full">
+        <div class="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center my-14">
+          <div class="absolute -inset-6 border-4 border-dashed border-emerald-300 rounded-full opacity-60"></div>
+          <div id="circle" class="w-full h-full rounded-full bg-emerald-200 relative z-10"></div>
+        </div>
+        <p id="breathText" class="text-3xl md:text-4xl font-extrabold text-teal-800" aria-live="polite">Siap?</p>
+        <p id="breathCount" class="text-lg font-bold text-teal-700 mt-2"></p>
+      </div>
+
+      <div id="menu" class="gone w-full max-w-4xl">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-800 mb-6">Bagus! Kita siap belajar. Mau mulai dari mana?</h2>
+        <div class="grid gap-4 md:grid-cols-3 text-left">
+          <a href="subbab1.html" class="glass block rounded-3xl p-5 border-4 border-sky-300 hover:-translate-y-1 transition"><div class="text-4xl mb-1" aria-hidden="true">🔍</div><b class="text-xl block">Kenali AI</b>Ada AI apa saja? Ayo tebak!</a>
+          <a href="subbab2.html" class="glass block rounded-3xl p-5 border-4 border-emerald-300 hover:-translate-y-1 transition"><div class="text-4xl mb-1" aria-hidden="true">⚖️</div><b class="text-xl block">Untung-Rugi AI</b>Manfaat dan bahayanya. Kamu yang menilai.</a>
+          <a href="subbab3.html" class="glass block rounded-3xl p-5 border-4 border-pink-300 hover:-translate-y-1 transition"><div class="text-4xl mb-1" aria-hidden="true">🎨</div><b class="text-xl block">Poster Pakai AI Bijak</b>Siap membuat poster bersama timmu.</a>
+        </div>
+        <p class="mt-6 font-bold text-indigo-700">AI itu alat, manusia penentu.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const $=id=>document.getElementById(id), wait=ms=>new Promise(r=>setTimeout(r,ms));
+let voiceOn=true;
+
+/* simbol melayang di latar */
+(function(){const S=['</>','{ }','0 1','AI','⚙️','💡','★','+','=','101'],box=$('syms');
+ for(let i=0;i<16;i++){const s=document.createElement('span');s.className='sym';s.textContent=S[i%S.length];
+  s.style.cssText='left:'+(Math.random()*95)+'%;bottom:-8%;font-size:'+(18+Math.random()*26)+'px;animation-duration:'+(22+Math.random()*26)+'s;animation-delay:-'+(Math.random()*40)+'s';box.appendChild(s)}})();
+
+/* suara */
+$('voiceBtn').onclick=e=>{voiceOn=!voiceOn;e.currentTarget.textContent=voiceOn?'🔊':'🔇';e.currentTarget.setAttribute('aria-pressed',voiceOn);
+ e.currentTarget.setAttribute('aria-label',voiceOn?'Suara Pixel menyala':'Suara Pixel mati');if(!voiceOn&&window.speechSynthesis)speechSynthesis.cancel()};
+function speak(t){try{if(!voiceOn||!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate=.95;u.pitch=1.2;speechSynthesis.speak(u)}catch(e){}}
+
+/* mengetik */
+async function say(t){speak(t);$('dots').classList.replace('gone','flex');$('pixelText').textContent='';
+ for(const ch of t){$('pixelText').textContent+=ch;await wait(ch===' '?22:30)}
+ $('dots').classList.replace('flex','gone')}
+
+/* mulai */
+$('startBtn').onclick=async()=>{
+ const intro=$('intro');intro.style.transition='opacity .5s';intro.style.opacity=0;await wait(500);intro.classList.add('gone');
+ const m=$('main');m.classList.remove('gone');m.classList.add('flex');
+ const mas=$('mascot');mas.classList.add('slide-in');await wait(900);
+ $('bubble').classList.add('show');await wait(500);
+ await say('Aku Pixel, sahabat belajar bersama Pak Lim. Hari ini kita belajar mengenal AI. Ingat pesan dari Pixel: AI itu alat, manusia penentu. Sebelum mulai, yuk tenangkan diri dengan napas dalam tiga kali.');
+ $('napasBtn').classList.add('show')};
+
+/* napas 3 kali */
+$('napasBtn').onclick=async()=>{
+ const b=$('napasBtn');b.classList.remove('show');await wait(400);b.classList.add('gone');
+ const box=$('breath');box.classList.replace('gone','flex');const c=$('circle'),t=$('breathText'),n=$('breathCount');
+ for(let i=1;i<=3;i++){n.textContent='Napas ke-'+i+' dari 3';
+  t.textContent='Tarik napas…';c.className='w-full h-full rounded-full relative z-10 in';await wait(3500);
+  t.textContent='Buang napas…';c.className='w-full h-full rounded-full relative z-10 out';await wait(3500)}
+ n.textContent='';t.textContent='Bagus! Kita siap belajar. 🌟';speak('Bagus! Kita siap belajar.');await wait(1800);
+ box.classList.replace('flex','gone');$('menu').classList.remove('gone');
+ $('pixelText').textContent='Pilih petualangan belajarmu, ya!';speak('Pilih petualangan belajarmu, ya!')};
+</script>
+</body>
+</html>
