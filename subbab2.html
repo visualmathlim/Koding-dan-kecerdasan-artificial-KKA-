@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission 2 — Untung-Rugi AI | Pixel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Quicksand','ui-rounded','system-ui','sans-serif']},boxShadow:{glow:'0 0 0 6px rgba(129,140,248,.10),0 18px 50px rgba(30,41,59,.12)'}}}}
+</script>
+<style>
+  body{margin:0;color:#243047;font-family:Quicksand,ui-rounded,system-ui,sans-serif;overflow-x:hidden;
+    background:radial-gradient(circle at 10% 8%,rgba(254,240,138,.6),transparent 22%),radial-gradient(circle at 90% 14%,rgba(251,207,232,.6),transparent 23%),linear-gradient(180deg,#dbeafe 0%,#eef7ff 34%,#ecfdf5 72%,#fff7ed 100%);min-height:100vh}
+  .grid-bg{position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(rgba(79,70,229,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(79,70,229,.05) 1px,transparent 1px);background-size:36px 36px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 88%);mask-image:linear-gradient(180deg,#000,transparent 88%)}
+  .glass{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .card{border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 50px rgba(30,41,59,.10)}
+  .hidden-page{display:none!important}
+  .float{animation:float 4s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}
+  .pop{animation:pop .45s ease both}@keyframes pop{0%{opacity:0;transform:scale(.94) translateY(8px)}100%{opacity:1;transform:none}}
+  .slide{animation:slide .55s cubic-bezier(.2,.8,.2,1) both}@keyframes slide{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+  .talking{animation:talk .9s ease-in-out infinite}@keyframes talk{50%{opacity:.55}}
+  .progress-fill{transition:width .45s ease}
+  .choice{transition:.18s ease;min-height:58px}
+  .choice:hover:not(:disabled){transform:translateY(-2px)}
+  .choice:disabled{cursor:not-allowed}
+  .choice.correct{background:#dcfce7;border-color:#34d399;color:#065f46}
+  .choice.wrong{background:#ffe4e6;border-color:#fb7185;color:#9f1239}
+  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+  .pledge input:checked + .box{background:#34d399;border-color:#059669}
+  .pledge input:checked + .box svg{display:block}
+  .pledge input:checked ~ div p:first-child{color:#047857}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<!-- INTRO -->
+<section id="introPage" class="min-h-screen flex items-center justify-center px-4 py-10">
+  <div class="max-w-3xl w-full text-center slide">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-indigo-100 text-indigo-700 font-extrabold shadow-sm">⚖️ MISSION 2 • UNTUNG-RUGI AI</div>
+    <div class="mt-7 flex justify-center">
+      <div class="glass rounded-[2rem] p-5 shadow-glow">
+        <svg viewBox="0 0 120 140" class="w-32 h-32 md:w-40 md:h-40 float" role="img" aria-label="Pixel">
+          <circle cx="60" cy="16" r="8" fill="#fde68a"/><line x1="60" y1="29" x2="60" y2="16" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+          <rect x="24" y="29" width="72" height="63" rx="20" fill="#e2e8f0" stroke="#64748b" stroke-width="4"/>
+          <rect x="14" y="50" width="11" height="21" rx="4" fill="#94a3b8"/><rect x="95" y="50" width="11" height="21" rx="4" fill="#94a3b8"/>
+          <rect x="34" y="41" width="52" height="38" rx="11" fill="#1e293b"/>
+          <circle cx="48" cy="58" r="6" fill="#34d399"/><circle cx="72" cy="58" r="6" fill="#34d399"/>
+          <path d="M48 68 Q60 76 72 68" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M40 92 L80 92 L90 128 L30 128 Z" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/><circle cx="60" cy="108" r="7" fill="#38bdf8"/>
+        </svg>
+      </div>
+    </div>
+    <h1 class="mt-5 text-4xl md:text-6xl font-black text-slate-800">Untung-Rugi AI</h1>
+    <p class="mt-3 text-lg md:text-xl font-semibold text-slate-600">Timbang dulu, baru pakai! Jadilah Detektif Siber yang bijak.</p>
+
+    <div class="mt-7 glass card rounded-[2rem] p-5 md:p-7 text-left max-w-2xl mx-auto">
+      <p class="font-black text-indigo-800 text-lg">🎯 Tujuan Pembelajaran</p>
+      <p class="mt-1 font-semibold text-slate-600">Setelah misi ini, aku bisa:</p>
+      <div class="mt-4 grid sm:grid-cols-2 gap-3">
+        <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-100 p-4"><div class="text-3xl">🌟</div><p class="font-black text-emerald-800 mt-1">Dampak Positif</p><p class="text-sm font-semibold text-slate-600">Menyebutkan manfaat AI dalam belajar dan kehidupan.</p></div>
+        <div class="rounded-2xl bg-rose-50 border-2 border-rose-100 p-4"><div class="text-3xl">⚠️</div><p class="font-black text-rose-800 mt-1">Dampak Negatif</p><p class="text-sm font-semibold text-slate-600">Menyebutkan risiko AI, seperti hoaks dan bocornya data pribadi.</p></div>
+      </div>
+    </div>
+    <button id="start" class="mt-8 inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-full text-xl font-black shadow-glow transition active:translate-y-1">Mulai Mission 2 <span>→</span></button>
+  </div>
+</section>
+
+<!-- MAIN -->
+<section id="mainPage" class="hidden-page">
+  <header class="sticky top-0 z-40 glass border-b border-white/80 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-indigo-100 grid place-items-center text-xl">⚖️</div>
+      <div class="min-w-0">
+        <p class="font-black text-slate-800 leading-tight">MISSION 2 — UNTUNG-RUGI AI</p>
+        <p class="text-xs md:text-sm font-bold text-slate-500">Kawan belajar: Pixel</p>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="hidden sm:flex items-center gap-2 text-sm font-black text-indigo-700">
+          <span id="progressText">1/5</span>
+          <div class="w-28 h-2.5 rounded-full bg-slate-200 overflow-hidden"><div id="progressBar" class="progress-fill h-full bg-indigo-500" style="width:20%"></div></div>
+        </div>
+        <button id="voiceBtn" type="button" aria-pressed="true" class="px-3 py-2 rounded-full bg-indigo-100 text-indigo-800 font-black text-sm">🔊 Suara</button>
+        <div class="px-3 py-2 rounded-full bg-amber-100 text-amber-800 font-black text-sm">⭐ <span id="score">0</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-7 md:py-10">
+
+    <!-- STEP 1: KASUS -->
+    <section id="step1" class="step">
+      <div class="glass card rounded-[2rem] p-5 md:p-8">
+        <span class="inline-flex px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-sm font-black">📋 KASUS HARI INI</span>
+        <h2 class="text-3xl md:text-4xl font-black mt-3">PR Budi</h2>
+        <div class="mt-5 rounded-3xl bg-amber-50 border-2 border-amber-200 p-5 md:p-7 flex gap-4 items-start">
+          <div class="text-5xl">📝</div>
+          <p class="text-lg md:text-xl font-bold text-amber-900 leading-relaxed">Budi mendapat PR mengarang cerita pendek. Agar cepat selesai, ia menyuruh AI membuatkan seluruh ceritanya, lalu menyalinnya persis ke buku tugasnya.</p>
+        </div>
+        <div id="pause" class="mt-6 rounded-3xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 text-center">
+          <div class="text-5xl">⏸️</div>
+          <h3 class="text-2xl font-black mt-2">Jeda Diskusi</h3>
+          <p class="mt-2 font-semibold text-white/90">Tutup dulu layarnya sejenak. Bagaimana pendapatmu tentang tindakan Budi? Sampaikan bersama gurumu.</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end"><button id="next1" class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Dengar Pendapat Pixel →</button></div>
+    </section>
+
+    <!-- STEP 2: PIXEL & VOTE -->
+    <section id="step2" class="step hidden-page">
+      <div class="glass card rounded-[2rem] p-5 md:p-8">
+        <span class="inline-flex px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-sm font-black">🤖 PENDAPAT PIXEL</span>
+        <h2 class="text-3xl md:text-4xl font-black mt-3">Setuju dengan Pixel?</h2>
+        <div class="mt-6 flex flex-col md:flex-row gap-5 items-center md:items-start">
+          <div class="relative shrink-0">
+            <div class="w-28 h-28 rounded-3xl bg-indigo-100 grid place-items-center text-6xl float">🤖</div>
+          </div>
+          <div class="flex-1 rounded-3xl bg-sky-50 border-2 border-sky-200 p-5 w-full">
+            <p class="font-black text-sky-800">Pixel (Logika Mesin):</p>
+            <p id="pixelText" class="mt-1 font-bold text-slate-700 leading-relaxed">“Secara komputasi, itu sangat efisien! Tugas selesai dalam 2 detik. Bukankah AI diciptakan untuk memudahkan manusia? Budi hebat karena memanfaatkan teknologi!”</p>
+            <button id="playPixel" class="mt-3 px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm disabled:opacity-60">🔊 Dengarkan Pixel</button>
+          </div>
+        </div>
+
+        <div id="voteArea" class="mt-7">
+          <h3 class="text-center font-black text-lg text-slate-700">Menurutmu, tindakan Budi ini...</h3>
+          <div class="grid sm:grid-cols-2 gap-4 mt-4">
+            <button data-v="pixel" class="vote choice rounded-2xl border-2 border-sky-200 bg-white p-4 text-left"><span class="text-2xl block">🤖👍 Tepat!</span><span class="text-sm font-semibold text-slate-600">Setuju dengan Pixel</span></button>
+            <button data-v="bijak" class="vote choice rounded-2xl border-2 border-emerald-200 bg-white p-4 text-left"><span class="text-2xl block">🤔 Kurang Bijak</span><span class="text-sm font-semibold text-slate-600">Tidak setuju dengan Pixel</span></button>
+          </div>
+        </div>
+        <div id="voteFeedback" class="hidden mt-6 rounded-2xl p-5 bg-indigo-50 border-2 border-indigo-200 text-center pop" aria-live="polite">
+          <p id="voteText" class="text-lg font-bold text-indigo-800"></p>
+          <p id="voteStatus" class="mt-2 font-bold text-slate-600 talking">🔊 Pixel sedang bicara...</p>
+          <div class="mt-3 inline-block bg-white px-4 py-2 rounded-full border border-indigo-100 text-sm font-black text-indigo-600">💡 AI itu alat bantu, manusia penentunya.</div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end"><button id="next2" disabled class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Main Sortir Kartu →</button></div>
+    </section>
+
+    <!-- STEP 3: GAME -->
+    <section id="step3" class="step hidden-page">
+      <div class="glass card rounded-[2rem] p-5 md:p-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <span class="inline-flex px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-black">🎮 GAME</span>
+            <h2 class="text-3xl md:text-4xl font-black mt-3">Sortir Kartu Dampak AI</h2>
+            <p class="mt-2 text-lg font-semibold text-slate-600">Baca situasinya, lalu pilih keranjang yang tepat.</p>
+          </div>
+          <div class="rounded-2xl bg-white border-2 border-amber-200 px-4 py-3"><p class="text-xs uppercase font-black text-amber-700">Skor</p><p class="text-2xl font-black text-amber-900"><span id="gameScore">0</span> / <span id="gameTotal">4</span></p></div>
+        </div>
+        <div id="gameArea" class="mt-7"></div>
+        <div id="gameDone" class="hidden mt-7 rounded-[2rem] bg-gradient-to-br from-indigo-600 to-violet-600 text-white p-6 md:p-8 text-center">
+          <div class="text-6xl">🏆</div>
+          <h3 class="text-3xl font-black mt-3">Detektif Siber Hebat!</h3>
+          <p class="mt-2 text-white/90 text-lg font-semibold">Kamu sudah menimbang dampak AI dengan bijak.</p>
+          <div class="mt-4 inline-flex bg-white/15 rounded-full px-5 py-3 font-black">⭐ Skor kamu: <span id="finalScore" class="ml-1">0</span>/4</div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end"><button id="next3" class="hidden btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Lihat Rangkuman →</button></div>
+    </section>
+
+    <!-- STEP 4: RANGKUMAN -->
+    <section id="step4" class="step hidden-page">
+      <div class="glass card rounded-[2rem] p-5 md:p-8">
+        <span class="inline-flex px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-sm font-black">🧠 RANGKUMAN</span>
+        <h2 class="text-3xl md:text-4xl font-black mt-3">Dampak Positif dan Negatif AI</h2>
+        <div class="mt-6 grid md:grid-cols-2 gap-5">
+          <article class="rounded-3xl bg-emerald-50 border-2 border-emerald-200 p-5">
+            <div class="text-5xl">🌟</div><h3 class="text-2xl font-black text-emerald-800 mt-2">Dampak Positif</h3>
+            <ul class="mt-3 space-y-2 font-bold text-slate-700">
+              <li>✅ Membantu belajar hal baru, misalnya menerjemahkan artikel.</li>
+              <li>✅ Memberi ide dan inspirasi untuk dikembangkan sendiri.</li>
+              <li>✅ Mempercepat pekerjaan yang berulang.</li>
+            </ul>
+          </article>
+          <article class="rounded-3xl bg-rose-50 border-2 border-rose-200 p-5">
+            <div class="text-5xl">⚠️</div><h3 class="text-2xl font-black text-rose-800 mt-2">Dampak Negatif</h3>
+            <ul class="mt-3 space-y-2 font-bold text-slate-700">
+              <li>❌ Data pribadi bisa bocor atau disalahgunakan.</li>
+              <li>❌ Hoaks dan gambar palsu mudah tersebar.</li>
+              <li>❌ Menyalin tanpa berpikir membuat otak kurang berlatih.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="mt-6 rounded-3xl bg-indigo-50 border border-indigo-100 p-5 flex gap-4 items-start">
+          <div class="text-3xl">💬</div>
+          <div>
+            <p class="font-black text-indigo-800">Pesan dari Pixel</p>
+            <p class="mt-1 font-bold text-slate-700">“Untung atau rugi tergantung cara kita memakainya. Pakai dengan bijak!”</p>
+            <button id="playSummary" class="mt-3 px-4 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm disabled:opacity-60">🔊 Dengarkan Pixel</button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end"><button id="next4" class="btn bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">Buat Janji Siber →</button></div>
+    </section>
+
+    <!-- STEP 5: JANJI -->
+    <section id="step5" class="step hidden-page">
+      <div class="glass card rounded-[2rem] p-5 md:p-8">
+        <div class="text-center">
+          <span class="text-5xl block">📜</span>
+          <h2 class="text-3xl md:text-4xl font-black mt-2 text-pink-600">Janji Siber</h2>
+          <p class="mt-2 text-lg font-semibold text-slate-600">Centang semua janji untuk membuka misi berikutnya!</p>
+        </div>
+        <div class="mt-6 space-y-4 max-w-2xl mx-auto" id="pledges">
+          <label class="pledge flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 bg-white hover:bg-pink-50 transition cursor-pointer">
+            <input type="checkbox" class="sr-only"><div class="box w-8 h-8 shrink-0 bg-white border-2 border-slate-300 rounded-lg grid place-items-center mt-1"><svg class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div><p class="font-black text-lg">🙋 Minta Izin</p><p class="text-sm font-semibold text-slate-500">Aku akan bertanya pada guru atau orang tua dulu sebelum memakai AI untuk tugas sekolah.</p></div>
+          </label>
+          <label class="pledge flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 bg-white hover:bg-pink-50 transition cursor-pointer">
+            <input type="checkbox" class="sr-only"><div class="box w-8 h-8 shrink-0 bg-white border-2 border-slate-300 rounded-lg grid place-items-center mt-1"><svg class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div><p class="font-black text-lg">🕵️ Cek Fakta</p><p class="text-sm font-semibold text-slate-500">Aku tidak akan langsung percaya 100% pada jawaban AI. Aku akan mengeceknya lagi.</p></div>
+          </label>
+          <label class="pledge flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 bg-white hover:bg-pink-50 transition cursor-pointer">
+            <input type="checkbox" class="sr-only"><div class="box w-8 h-8 shrink-0 bg-white border-2 border-slate-300 rounded-lg grid place-items-center mt-1"><svg class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div><p class="font-black text-lg">🔒 Jaga Rahasia</p><p class="text-sm font-semibold text-slate-500">Aku tidak akan membagikan nama lengkap, alamat, nomor HP, atau fotoku ke AI.</p></div>
+          </label>
+          <label class="pledge flex items-start gap-4 p-4 rounded-2xl border-2 border-slate-100 bg-white hover:bg-pink-50 transition cursor-pointer">
+            <input type="checkbox" class="sr-only"><div class="box w-8 h-8 shrink-0 bg-white border-2 border-slate-300 rounded-lg grid place-items-center mt-1"><svg class="w-5 h-5 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+            <div><p class="font-black text-lg">🤝 Jujur</p><p class="text-sm font-semibold text-slate-500">Aku akan jujur mengatakan “Tugas ini dibantu AI” jika memang memakainya.</p></div>
+          </label>
+        </div>
+        <div class="text-center mt-8">
+          <a id="goNext" class="inline-flex items-center gap-2 bg-slate-300 text-slate-500 text-lg md:text-xl font-black py-4 px-8 rounded-full pointer-events-none transition">
+            <span id="goIcon">🔒</span><span id="goText">Selesaikan janji dulu...</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-10 pb-6 text-center"><p class="text-sm font-bold text-slate-500">KKA • Pixel</p></footer>
+  </main>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+const steps=['step1','step2','step3','step4','step5'];
+let current=0,score=0,gameIndex=0,gameScore=0,voted=false;
+
+/* ===== SUARA ===== */
+let voiceOn=true,speaking=false,token=0,cur=null,idVoice=null;
+function loadVoice(){try{idVoice=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('id'))||null}catch(e){}}
+if('speechSynthesis' in window){loadVoice();speechSynthesis.onvoiceschanged=loadVoice}
+function speak(text,onDone){
+  const t=++token;speaking=true;let fin=false,timer=null;
+  const finish=()=>{if(fin)return;fin=true;speaking=false;clearTimeout(timer);if(cur&&cur.finish===finish)cur=null;if(onDone)onDone();gates()};
+  cur={finish};
+  try{
+    if(voiceOn&&'speechSynthesis' in window){
+      speechSynthesis.cancel();
+      const parts=text.match(/[^.!?]+[.!?]*/g)||[text];
+      parts.forEach((p,i)=>{const u=new SpeechSynthesisUtterance(p.trim());u.lang='id-ID';if(idVoice)u.voice=idVoice;u.rate=.92;u.pitch=1.1;
+        const d=()=>{if(t===token&&i===parts.length-1)finish()};u.onend=d;u.onerror=d;speechSynthesis.speak(u)});
+      timer=setTimeout(()=>{if(t===token)finish()},Math.max(2200,text.length*75)*1.5+4000);
+      gates();return;
+    }
+  }catch(e){}
+  timer=setTimeout(()=>{if(t===token)finish()},Math.max(2000,text.length*45));gates();
+}
+function stopSpeak(){token++;speaking=false;cur=null;try{speechSynthesis.cancel()}catch(e){}}
+$('voiceBtn').onclick=()=>{
+  voiceOn=!voiceOn;$('voiceBtn').textContent=voiceOn?'🔊 Suara':'🔇 Mati';$('voiceBtn').setAttribute('aria-pressed',String(voiceOn));
+  if(!voiceOn&&cur){const c=cur;stopSpeak();c.finish()}
+};
+function gates(){
+  $('playPixel').disabled=speaking;$('playSummary').disabled=speaking;
+  document.querySelectorAll('.vote').forEach(b=>b.disabled=speaking||voted);
+}
+
+/* ===== UMUM ===== */
+function showStep(i){
+  stopSpeak();steps.forEach((id,k)=>$(id).classList.toggle('hidden-page',k!==i));current=i;
+  $('progressText').textContent=(i+1)+'/'+steps.length;$('progressBar').style.width=((i+1)/steps.length*100)+'%';
+  gates();window.scrollTo({top:0,behavior:'smooth'});
+}
+function addScore(n){score+=n;$('score').textContent=score}
+$('start').onclick=()=>{$('introPage').classList.add('hidden-page');$('mainPage').classList.remove('hidden-page');showStep(0)};
+$('next1').onclick=()=>showStep(1);
+$('next2').onclick=()=>{renderGame();showStep(2)};
+$('next3').onclick=()=>showStep(3);
+$('next4').onclick=()=>showStep(4);
+
+/* ===== STEP 2 ===== */
+$('playPixel').onclick=()=>speak($('pixelText').textContent.replace(/[“”]/g,''));
+document.querySelectorAll('.vote').forEach(b=>b.onclick=()=>{
+  if(speaking||voted)return;voted=true;
+  document.querySelectorAll('.vote').forEach(x=>x.disabled=true);
+  b.classList.add(b.dataset.v==='bijak'?'correct':'wrong');
+  $('voteFeedback').classList.remove('hidden');
+  let txt,sp;
+  if(b.dataset.v==='bijak'){addScore(1);
+    txt='✨ Tepat sekali! Pixel tersadar: “Oh, aku mengerti! AI itu alat bantu, tapi otak manusia yang harus berproses dan bertumbuh.”';
+    sp='Tepat sekali! Oh, aku mengerti sekarang. AI itu alat bantu, tapi otak manusia yang harus berproses dan bertumbuh.';
+  }else{
+    txt='🤔 Tunggu dulu... Pixel merenung: “Kalau mesin yang mengerjakan semuanya, kapan otak Budi berlatih? Coba pikirkan lagi tujuan kita bersekolah!”';
+    sp='Tunggu dulu. Kalau mesin yang mengerjakan semuanya, kapan otak Budi berlatih? Coba pikirkan lagi tujuan kita bersekolah.';
+  }
+  $('voteText').textContent=txt;
+  speak(sp,()=>{$('voteStatus').classList.remove('talking');$('voteStatus').textContent='✅ Pixel selesai bicara.';$('next2').disabled=false});
+});
+
+/* ===== STEP 3: GAME ===== */
+const cards=[
+  {icon:'🌐',t:'AI menerjemahkan artikel bahasa Inggris untuk referensi tugas sains.',a:'positif',ok:'Tepat! AI membantu kita belajar hal baru dan membuka pintu ilmu dengan lebih mudah.',no:'Coba lagi. Ini contoh AI sebagai alat bantu belajar, jadi dampaknya positif.'},
+  {icon:'🔐',t:'Budi mengirim foto wajah, nama lengkap, dan alamat rumahnya ke chatbot AI.',a:'negatif',ok:'Tepat! Data pribadi bisa bocor atau disalahgunakan. Jangan berikan data pribadimu ke AI.',no:'Awas! Membagikan data pribadi ke AI berisiko bocor. Dampaknya negatif.'},
+  {icon:'🦖',t:'Melihat gambar dinosaurus berjalan di Monas buatan AI, lalu langsung menyebarkannya.',a:'negatif',ok:'Tepat! Gambar itu rekayasa AI. Kita harus cek fakta sebelum menyebarkan.',no:'Hati-hati! Gambar buatan AI bisa menjadi hoaks kalau disebarkan tanpa dicek.'},
+  {icon:'💡',t:'Bertanya ide judul presentasi ke AI, lalu menulis isi presentasinya sendiri.',a:'tergantung',ok:'Bijak! Positif jika idenya kamu kembangkan sendiri, negatif jika langsung copy-paste.',no:'Ini tergantung cara memakainya. Positif jika kamu kembangkan sendiri, negatif jika hanya copy-paste.'}
+];
+$('gameTotal').textContent=cards.length;
+function renderGame(){
+  const c=cards[gameIndex];
+  $('gameArea').innerHTML=`<div class="rounded-[2rem] bg-white border-2 border-slate-100 p-5 md:p-7 pop">
+    <p class="text-center text-sm font-black text-slate-400">Kartu ${gameIndex+1} dari ${cards.length}</p>
+    <div class="text-7xl text-center mt-2">${c.icon}</div>
+    <p class="max-w-2xl mx-auto text-center mt-4 text-xl font-bold text-slate-700 leading-relaxed">${c.t}</p>
+    <div class="grid sm:grid-cols-3 gap-3 max-w-2xl mx-auto mt-7">
+      <button class="gc choice rounded-2xl border-2 border-emerald-200 bg-emerald-50 font-black text-lg text-emerald-800" data-c="positif">✅ Positif</button>
+      <button class="gc choice rounded-2xl border-2 border-rose-200 bg-rose-50 font-black text-lg text-rose-800" data-c="negatif">❌ Negatif</button>
+      <button class="gc choice rounded-2xl border-2 border-amber-200 bg-amber-50 font-black text-lg text-amber-800" data-c="tergantung">⚖️ Tergantung</button>
+    </div>
+    <div id="gf" class="hidden max-w-2xl mx-auto mt-5" aria-live="polite"></div></div>`;
+  $('gameScore').textContent=gameScore;
+  document.querySelectorAll('.gc').forEach(b=>b.onclick=()=>answer(b));
+}
+function answer(b){
+  const c=cards[gameIndex],last=gameIndex===cards.length-1,good=b.dataset.c===c.a;
+  document.querySelectorAll('.gc').forEach(x=>x.disabled=true);
+  const f=$('gf');f.classList.remove('hidden');
+  if(good){b.classList.add('correct');gameScore++;addScore(1);
+    f.className='max-w-2xl mx-auto mt-5 rounded-2xl p-5 bg-emerald-50 border border-emerald-200 pop';
+    f.innerHTML=`<p class="font-black text-xl text-emerald-800">✅ ${c.ok}</p>`;
+  }else{b.classList.add('wrong');document.querySelector(`.gc[data-c="${c.a}"]`).classList.add('correct');
+    f.className='max-w-2xl mx-auto mt-5 rounded-2xl p-5 bg-amber-50 border border-amber-200 pop';
+    f.innerHTML=`<p class="font-black text-xl text-amber-900">🔄 Belum tepat.</p><p class="mt-2 font-semibold text-amber-950">${c.no}</p>`;
+  }
+  f.insertAdjacentHTML('beforeend',`<p id="gs" class="mt-3 font-bold text-slate-700 talking">🔊 Pixel sedang menjelaskan...</p>
+    <button id="nq" disabled class="btn mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full font-black shadow-lg">${last?'Lihat Hasil →':'Kartu Berikutnya →'}</button>`);
+  $('gameScore').textContent=gameScore;
+  $('nq').onclick=()=>{stopSpeak();gameIndex++;
+    if(gameIndex<cards.length)renderGame();
+    else{$('gameArea').classList.add('hidden');$('finalScore').textContent=gameScore;$('gameDone').classList.remove('hidden');$('next3').classList.remove('hidden')}};
+  speak((good?'Tepat. ':'Belum tepat. ')+(good?c.ok:c.no),()=>{
+    const s=$('gs'),n=$('nq');if(s){s.classList.remove('talking');s.textContent='✅ Pixel selesai menjelaskan.'}if(n)n.disabled=false});
+}
+
+/* ===== STEP 4 ===== */
+$('playSummary').onclick=()=>speak('Dampak positif AI: membantu belajar, memberi ide, dan mempercepat pekerjaan. Dampak negatif AI: data pribadi bisa bocor, hoaks mudah tersebar, dan menyalin tanpa berpikir membuat otak kurang berlatih. Untung atau rugi tergantung cara kita memakainya. Pakai dengan bijak!');
+
+/* ===== STEP 5: JANJI ===== */
+const checks=document.querySelectorAll('#pledges input');
+checks.forEach(c=>c.onchange=()=>{
+  const all=[...checks].every(x=>x.checked),a=$('goNext');
+  if(all){
+    a.href='subbab3.html';
+    a.className='inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white text-lg md:text-xl font-black py-4 px-8 rounded-full shadow-xl transition hover:-translate-y-1';
+    $('goIcon').textContent='🚀';$('goText').textContent='Lanjut ke Misi 3: Buat Poster!';
+    if(!a.dataset.played){a.dataset.played='1';speak('Wah, kamu sudah berjanji! Ayo lanjut ke misi berikutnya.')}
+  }else{
+    a.removeAttribute('href');delete a.dataset.played;
+    a.className='inline-flex items-center gap-2 bg-slate-300 text-slate-500 text-lg md:text-xl font-black py-4 px-8 rounded-full pointer-events-none transition';
+    $('goIcon').textContent='🔒';$('goText').textContent='Selesaikan janji dulu...';
+  }
+});
+</script>
+</body>
+</html>
